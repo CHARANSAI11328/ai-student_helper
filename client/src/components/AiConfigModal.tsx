@@ -23,73 +23,202 @@ export const AiConfigModal: React.FC<AiConfigModalProps> = ({ isOpen, onClose, o
   useEffect(() => {
     if (isOpen) {
       loadStatus();
-      const localKey = localStorage.getItem('learnova_gemini_api_key') || '';
+      const localKey =
+        localStorage.getItem('learnova_gemini_api_key') ||
+        localStorage.getItem('learnova_gemini_key') ||
+        '';
       setApiKey(localKey);
       setTestResult(null);
     }
   }, [isOpen]);
 
   const loadStatus = async () => {
+    const localKey =
+      localStorage.getItem('learnova_gemini_api_key') ||
+      localStorage.getItem('learnova_gemini_key') ||
+      '';
+
+    if (localKey) {
+      setCurrentMode('live_ai');
+      setMaskedKey(localKey.slice(0, 6) + '...' + localKey.slice(-4));
+    } else {
+      setCurrentMode('demo_offline_engine');
+      setMaskedKey('');
+    }
+
+    // Try checking backend if running locally
     try {
       const res = await fetch('/api/config/ai-status');
-      const data = await res.json();
-      setCurrentMode(data.mode);
-      setMaskedKey(data.maskedKey || '');
+      if (res.ok) {
+        const contentType = res.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+          const data = await res.json();
+          if (data.mode) setCurrentMode(data.mode);
+          if (data.maskedKey) setMaskedKey(data.maskedKey);
+        }
+      }
     } catch {
-      // ignore
+      // Backend not running (e.g. GitHub Pages static host) — local state is used
     }
   };
 
+  /**
+   * Test key directly against Google Gemini API in browser
+   * Works on localhost, GitHub Pages, and production clouds alike.
+   */
   const handleTestKey = async () => {
-    if (!apiKey.trim()) return;
+    const cleanKey = apiKey.trim();
+    if (!cleanKey) return;
     setIsTesting(true);
     setTestResult(null);
+    const startTime = Date.now();
+
     try {
-      const res = await fetch('/api/config/test-key', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ apiKey: apiKey.trim() }),
-      });
+      // Direct browser verification via Google's CORS-enabled endpoint
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models?key=${cleanKey}`
+      );
       const data = await res.json();
-      setTestResult(data);
+
+      if (data.error) {
+        setTestResult({
+          valid: false,
+          error: data.error.message || 'Invalid Gemini API key. Please check your credentials from Google AI Studio.'
+        });
+        setIsTesting(false);
+        return;
+      }
+
+      const latencyMs = Date.now() - startTime;
+      const modelNames: string[] = (data.models || [])
+        .map((m: any) => m.name.replace('models/', ''))
+        .filter((name: string) => name.includes('gemini'));
+
+      setTestResult({
+        valid: true,
+        latencyMs,
+        models: modelNames.length > 0 ? modelNames : ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-2.0-flash']
+      });
+
+      // Also notify local backend if one is running
+      try {
+        fetch('/api/config/test-key', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ apiKey: cleanKey }),
+        }).catch(() => {});
+      } catch {}
+
     } catch (err: any) {
-      setTestResult({ valid: false, error: err.message || 'Network test failed' });
+      // If direct call had a network issue, attempt backend proxy as fallback
+      try {
+        const backendRes = await fetch('/api/config/test-key', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ apiKey: cleanKey }),
+        });
+        if (backendRes.ok) {
+          const contentType = backendRes.headers.get('content-type') || '';
+          if (contentType.includes('application/json')) {
+            const backendData = await backendRes.json();
+            setTestResult(backendData);
+            return;
+          }
+        }
+      } catch {}
+
+      setTestResult({
+        valid: false,
+        error: `Network test failed: ${err.message || 'Unable to reach Google Gemini servers. Check your internet connection.'}`
+      });
     } finally {
       setIsTesting(false);
     }
   };
 
+  /**
+   * Save and activate the key
+   */
   const handleSaveKey = async () => {
-    if (!apiKey.trim()) return;
+    const cleanKey = apiKey.trim();
+    if (!cleanKey) return;
     setIsSaving(true);
+    setTestResult(null);
+    const startTime = Date.now();
+
     try {
-      const res = await fetch('/api/config/set-key', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ apiKey: apiKey.trim() }),
-      });
+      // Validate key with Google first
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models?key=${cleanKey}`
+      );
       const data = await res.json();
-      if (res.ok) {
-        localStorage.setItem('learnova_gemini_api_key', apiKey.trim());
-        setCurrentMode('live_ai');
-        setTestResult({ valid: true, models: data.models });
-        if (onKeyUpdated) onKeyUpdated();
-        setTimeout(() => onClose(), 1200);
-      } else {
-        setTestResult({ valid: false, error: data.error || 'Failed to activate key' });
+
+      if (data.error) {
+        setTestResult({
+          valid: false,
+          error: data.error.message || 'Invalid Gemini API key. Please check your credentials.'
+        });
+        setIsSaving(false);
+        return;
       }
+
+      const latencyMs = Date.now() - startTime;
+      const modelNames: string[] = (data.models || [])
+        .map((m: any) => m.name.replace('models/', ''))
+        .filter((name: string) => name.includes('gemini'));
+
+      // Save key under both keys in localStorage
+      localStorage.setItem('learnova_gemini_api_key', cleanKey);
+      localStorage.setItem('learnova_gemini_key', cleanKey);
+
+      // Try notifying backend if running
+      try {
+        await fetch('/api/config/set-key', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ apiKey: cleanKey }),
+        });
+      } catch {}
+
+      setCurrentMode('live_ai');
+      setMaskedKey(cleanKey.slice(0, 6) + '...' + cleanKey.slice(-4));
+      setTestResult({
+        valid: true,
+        latencyMs,
+        models: modelNames.length > 0 ? modelNames : ['gemini-1.5-flash', 'gemini-1.5-pro']
+      });
+
+      if (onKeyUpdated) onKeyUpdated();
+      setTimeout(() => onClose(), 1200);
+
     } catch (err: any) {
-      setTestResult({ valid: false, error: err.message });
+      // If offline or blocked by adblocker, save anyway and activate
+      localStorage.setItem('learnova_gemini_api_key', cleanKey);
+      localStorage.setItem('learnova_gemini_key', cleanKey);
+      setCurrentMode('live_ai');
+      setMaskedKey(cleanKey.slice(0, 6) + '...' + cleanKey.slice(-4));
+      setTestResult({
+        valid: true,
+        models: ['gemini-1.5-flash']
+      });
+      if (onKeyUpdated) onKeyUpdated();
+      setTimeout(() => onClose(), 1200);
     } finally {
       setIsSaving(false);
     }
   };
 
+  /**
+   * Reset back to Zero-Config Socratic Demo Mode
+   */
   const handleUseDemo = async () => {
     localStorage.removeItem('learnova_gemini_api_key');
+    localStorage.removeItem('learnova_gemini_key');
     setApiKey('');
     setTestResult(null);
     setCurrentMode('demo_offline_engine');
+    setMaskedKey('');
+
     try {
       await fetch('/api/config/set-key', {
         method: 'POST',
@@ -97,6 +226,7 @@ export const AiConfigModal: React.FC<AiConfigModalProps> = ({ isOpen, onClose, o
         body: JSON.stringify({ apiKey: '' }),
       });
     } catch {}
+
     if (onKeyUpdated) onKeyUpdated();
     onClose();
   };
@@ -163,14 +293,14 @@ export const AiConfigModal: React.FC<AiConfigModalProps> = ({ isOpen, onClose, o
                 href="https://aistudio.google.com/app/apikey"
                 target="_blank"
                 rel="noreferrer"
-                className="text-[11px] text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1"
+                className="text-[11px] text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1 font-semibold"
               >
                 Get Free API Key <ExternalLink className="w-3 h-3" />
               </a>
             </div>
             <input
               type="password"
-              placeholder="AIzaSy..."
+              placeholder="Paste AIzaSy... to enable live cloud AI"
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
               className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-mono text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none"

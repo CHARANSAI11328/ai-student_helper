@@ -36,20 +36,27 @@ function setLocalItem<T>(key: string, value: T): void {
   } catch {}
 }
 
+export function getStoredApiKey(): string {
+  return localStorage.getItem('learnova_gemini_api_key') ||
+         localStorage.getItem('learnova_gemini_key') ||
+         '';
+}
+
 export async function checkApiHealth(): Promise<SystemHealth> {
   try {
     const res = await fetch(`${API_BASE}/health`);
     if (!res.ok) throw new Error('Unreachable');
     return await res.json();
   } catch {
+    const key = getStoredApiKey();
     return {
       status: 'ok',
       service: 'Learnova AI (Client PWA Mode)',
       version: '1.0.0',
-      geminiConfigured: Boolean(localStorage.getItem('learnova_gemini_key')),
+      geminiConfigured: Boolean(key),
       defaultModelText: 'gemini-1.5-flash',
       defaultModelVision: 'gemini-1.5-flash',
-      mode: 'offline_socratic',
+      mode: key ? 'live_ai' : 'offline_socratic',
       timestamp: new Date().toISOString()
     };
   }
@@ -119,7 +126,7 @@ export interface AskTutorResponse {
 
 export async function askTutor(params: AskTutorParams): Promise<AskTutorResponse> {
   const startTime = Date.now();
-  const apiKey = localStorage.getItem('learnova_gemini_key') || '';
+  const apiKey = getStoredApiKey();
 
   try {
     const res = await fetch(`${API_BASE}/tutor/ask`, {
@@ -233,7 +240,7 @@ export async function analyzeImage(params: AnalyzeImageParams): Promise<AnalyzeI
   try {
     let body: FormData | string;
     const headers: Record<string, string> = {};
-    const apiKey = localStorage.getItem('learnova_gemini_key') || '';
+    const apiKey = getStoredApiKey();
     if (apiKey) headers['x-gemini-api-key'] = apiKey;
 
     if (params.imageFile) {

@@ -274,29 +274,45 @@ export const SettingsPage: React.FC = () => {
                 const key = input?.value?.trim() || '';
                 if (!key) {
                   localStorage.removeItem('learnova_gemini_api_key');
-                  await fetch('/api/config/set-key', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ apiKey: '' }),
-                  });
+                  localStorage.removeItem('learnova_gemini_key');
+                  try {
+                    await fetch('/api/config/set-key', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ apiKey: '' }),
+                    });
+                  } catch {}
                   addToast('Switched to Zero-Config Socratic Demo Mode.', 'info');
                   return;
                 }
                 try {
-                  const res = await fetch('/api/config/set-key', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ apiKey: key }),
-                  });
-                  const data = await res.json();
-                  if (res.ok) {
-                    localStorage.setItem('learnova_gemini_api_key', key);
-                    addToast('🎉 Gemini API Key verified & activated live!', 'success');
-                  } else {
-                    addToast(data.error || 'Invalid API key.', 'error');
+                  // Direct Google API validation
+                  const googleRes = await fetch(
+                    `https://generativelanguage.googleapis.com/v1beta/models?key=${key}`
+                  );
+                  const googleData = await googleRes.json();
+                  if (googleData.error) {
+                    addToast(googleData.error.message || 'Invalid Gemini API key.', 'error');
+                    return;
                   }
+
+                  localStorage.setItem('learnova_gemini_api_key', key);
+                  localStorage.setItem('learnova_gemini_key', key);
+
+                  // Sync with local server if running
+                  try {
+                    await fetch('/api/config/set-key', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ apiKey: key }),
+                    });
+                  } catch {}
+
+                  addToast('🎉 Gemini API Key verified & activated live!', 'success');
                 } catch (e: any) {
-                  addToast(e.message || 'Key check failed.', 'error');
+                  localStorage.setItem('learnova_gemini_api_key', key);
+                  localStorage.setItem('learnova_gemini_key', key);
+                  addToast('Gemini API key saved to local storage.', 'success');
                 }
               }}
               className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold text-xs shadow-md transition-all active:scale-95 flex items-center gap-1.5"
