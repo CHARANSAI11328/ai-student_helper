@@ -29,7 +29,6 @@ fs.writeFileSync(path.join(distDir, '.nojekyll'), '');
 console.log('📤 Step 3: Pushing compiled static site to gh-pages branch...');
 try {
   execSync('git init', { cwd: distDir, stdio: 'ignore' });
-  execSync('git config --add safe.directory ' + JSON.stringify(distDir), { cwd: distDir, stdio: 'ignore' });
   execSync('git checkout -B gh-pages', { cwd: distDir, stdio: 'ignore' });
   execSync('git add -A', { cwd: distDir, stdio: 'ignore' });
   execSync('git commit -m "Deploy Learnova AI to GitHub Pages"', { cwd: distDir, stdio: 'ignore' });
