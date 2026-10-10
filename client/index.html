@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0e8ce9" />
+    <meta name="description" content="Learnova AI — Socratic STEM Learning Companion for School Students" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                50: '#f0f7ff',
+                100: '#e0effe',
+                200: '#bae0fd',
+                300: '#7cc7fb',
+                400: '#38a9f8',
+                500: '#0e8ce9',
+                600: '#026fc7',
+                700: '#0358a1',
+                800: '#074b85',
+                900: '#0c3f6e',
+                950: '#082849',
+              },
+              stem: {
+                math: '#2563eb',
+                physics: '#7c3aed',
+                chemistry: '#059669',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <title>Learnova AI — Socratic AI Learning Companion for School Students</title>
+  </head>
+  <body class="bg-slate-50 text-slate-900 antialiased selection:bg-brand-500 selection:text-white dark:bg-slate-950 dark:text-slate-100">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "short_name": "Learnova AI",
+  "name": "Learnova AI — Socratic Learning Companion",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192 512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#082849",
+  "theme_color": "#0e8ce9",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "description": "Personalized multimodal AI learning companion for school students (Mathematics, Physics, Chemistry)."
+}

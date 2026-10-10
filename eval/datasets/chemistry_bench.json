@@ -1,0 +1,65 @@
+[
+  {
+    "id": "chem-01",
+    "subject": "chemistry",
+    "grade": 10,
+    "topic": "Chemical Reactions & Balancing",
+    "language": "en",
+    "question": "Balance the following chemical equation step by step: Fe + H2O -> Fe3O4 + H2. Explain the atom count on each side.",
+    "expected_answer": "3Fe + 4H2O -> Fe3O4 + 4H2",
+    "required_concepts": ["Law of Conservation of Mass", "Atom balancing table"],
+    "rubric": {
+      "numerical_correctness": 1.0,
+      "chemical_formula_accuracy": 1.0,
+      "step_by_step_clarity": 1.0,
+      "grade_appropriateness": 1.0
+    }
+  },
+  {
+    "id": "chem-02",
+    "subject": "chemistry",
+    "grade": 10,
+    "topic": "Acids, Bases & Salts",
+    "language": "en",
+    "question": "What is the pH of a 0.001 M HCl solution? Is it acidic, neutral, or basic? Explain why.",
+    "expected_answer": "pH = 3 (Strongly acidic, because pH = -log[H+] = -log[10^-3] = 3)",
+    "required_concepts": ["pH definition: -log[H+]", "Strong acid complete dissociation"],
+    "rubric": {
+      "numerical_correctness": 1.0,
+      "chemical_formula_accuracy": 1.0,
+      "step_by_step_clarity": 1.0,
+      "grade_appropriateness": 1.0
+    }
+  },
+  {
+    "id": "chem-03",
+    "subject": "chemistry",
+    "grade": 9,
+    "topic": "Atomic Structure & Valency",
+    "language": "te",
+    "question": "సోడియం (Na, పరమాణు సంఖ్య 11) మరియు క్లోరిన్ (Cl, పరమాణు సంఖ్య 17) ల ఎలక్ట్రాన్ విన్యాసాన్ని వ్రాసి, NaCl ఎలా ఏర్పడుతుందో వివరించండి.",
+    "expected_answer": "Na: 2, 8, 1 (సంయోజకత 1), Cl: 2, 8, 7 (సంయోజకత 1); ఎలక్ట్రాన్ మార్పిడి ద్వారా అయానిక బంధం ఏర్పడుతుంది.",
+    "required_concepts": ["ఎలక్ట్రాన్ విన్యాసం", "అష్టక నియమం (Octet rule)", "అయానిక బంధం"],
+    "rubric": {
+      "chemical_formula_accuracy": 1.0,
+      "step_by_step_clarity": 1.0,
+      "grade_appropriateness": 1.0,
+      "language_quality": 1.0
+    }
+  },
+  {
+    "id": "chem-04",
+    "subject": "chemistry",
+    "grade": 10,
+    "topic": "Carbon Compounds",
+    "language": "en",
+    "question": "Write the molecular and structural formulas for Propane and Ethene. Specify if they are saturated or unsaturated.",
+    "expected_answer": "Propane: C3H8 (Saturated alkane), Ethene: C2H4 (Unsaturated alkene with double bond)",
+    "required_concepts": ["General formulas CnH2n+2 and CnH2n", "Covalent double bonds"],
+    "rubric": {
+      "chemical_formula_accuracy": 1.0,
+      "step_by_step_clarity": 1.0,
+      "grade_appropriateness": 1.0
+    }
+  }
+]

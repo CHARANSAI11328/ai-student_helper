@@ -1,0 +1,162 @@
+{
+  "profile": {
+    "id": "demo-student-aarav",
+    "name": "Aarav Sharma",
+    "grade": 10,
+    "language": "en",
+    "strongSubjects": [
+      "physics"
+    ],
+    "weakSubjects": [
+      "math"
+    ],
+    "learningGoals": "Master Class 10 Board Exam STEM fundamentals and score 95%+",
+    "explanationStyle": "step_by_step",
+    "confidenceLevel": "moderate",
+    "streakCount": 4,
+    "totalStudyMinutes": 197,
+    "xpPoints": 640,
+    "lastActiveDate": "2026-10-09"
+  },
+  "progress": {
+    "math-alg-lin": {
+      "topicId": "math-alg-lin",
+      "status": "mastered",
+      "masteryScore": 0.92,
+      "attemptsCount": 8,
+      "correctCount": 8,
+      "lastPracticedAt": "2026-10-07T23:18:13.163Z"
+    },
+    "math-alg-quad": {
+      "topicId": "math-alg-quad",
+      "status": "needs_revision",
+      "masteryScore": 0.358,
+      "attemptsCount": 9,
+      "correctCount": 5,
+      "lastMistakeConcept": "Discriminant signs with negative b",
+      "lastPracticedAt": "2026-10-10T00:08:56.555Z"
+    },
+    "phys-motion-1d": {
+      "topicId": "phys-motion-1d",
+      "status": "mastered",
+      "masteryScore": 0.88,
+      "attemptsCount": 5,
+      "correctCount": 5,
+      "lastPracticedAt": "2026-10-06T23:18:13.163Z"
+    },
+    "phys-elec-circuits": {
+      "topicId": "phys-elec-circuits",
+      "status": "in_progress",
+      "masteryScore": 0.65,
+      "attemptsCount": 4,
+      "correctCount": 3,
+      "lastMistakeConcept": "Parallel equivalent resistance reciprocal",
+      "lastPracticedAt": "2026-10-09T15:18:13.163Z"
+    },
+    "chem-reac-eq": {
+      "topicId": "chem-reac-eq",
+      "status": "mastered",
+      "masteryScore": 0.95,
+      "attemptsCount": 6,
+      "correctCount": 6,
+      "lastPracticedAt": "2026-10-08T23:18:13.163Z"
+    },
+    "chem-acids-bases": {
+      "topicId": "chem-acids-bases",
+      "status": "not_started",
+      "masteryScore": 0,
+      "attemptsCount": 0,
+      "correctCount": 0,
+      "lastPracticedAt": "2026-10-09T23:18:13.163Z"
+    }
+  },
+  "quizAttempts": [
+    {
+      "id": "quiz-att-1791590936555",
+      "studentId": "demo-student-aarav",
+      "subject": "math",
+      "topicId": "math-alg-quad",
+      "score": 1,
+      "totalQuestions": 3,
+      "timeSpentSeconds": 60,
+      "timestamp": "2026-10-10T00:08:56.555Z"
+    },
+    {
+      "id": "quiz-att-1791590182454",
+      "studentId": "demo-student-aarav",
+      "subject": "math",
+      "topicId": "math-alg-quad",
+      "score": 1,
+      "totalQuestions": 3,
+      "timeSpentSeconds": 60,
+      "timestamp": "2026-10-09T23:56:22.454Z"
+    },
+    {
+      "id": "quiz-att-1791589822021",
+      "studentId": "demo-student-aarav",
+      "subject": "math",
+      "topicId": "math-alg-quad",
+      "score": 1,
+      "totalQuestions": 3,
+      "timeSpentSeconds": 60,
+      "timestamp": "2026-10-09T23:50:22.021Z"
+    },
+    {
+      "id": "quiz-att-1",
+      "studentId": "demo-student-aarav",
+      "subject": "math",
+      "topicId": "math-alg-quad",
+      "topicTitle": "Quadratic Equations",
+      "score": 1,
+      "totalQuestions": 3,
+      "timeSpentSeconds": 140,
+      "weakConcepts": [
+        "Discriminant calculation with negative coefficients"
+      ],
+      "createdAt": "2026-10-09T19:18:13.163Z"
+    },
+    {
+      "id": "quiz-att-2",
+      "studentId": "demo-student-aarav",
+      "subject": "physics",
+      "topicId": "phys-elec-circuits",
+      "topicTitle": "Electricity & Ohm's Law",
+      "score": 2,
+      "totalQuestions": 3,
+      "timeSpentSeconds": 120,
+      "weakConcepts": [
+        "Parallel resistor reciprocal formula"
+      ],
+      "createdAt": "2026-10-09T15:18:13.163Z"
+    }
+  ],
+  "savedNotes": [
+    {
+      "id": "note-1",
+      "studentId": "demo-student-aarav",
+      "title": "Quadratic Formula & Discriminant Rules",
+      "subject": "math",
+      "topicId": "math-alg-quad",
+      "contentMarkdown": "### Quadratic Roots Summary\nFor $ax^2 + bx + c = 0$:\n$$x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$$\n- $D > 0$: Two distinct real roots\n- $D = 0$: Two equal real roots (perfect square)\n- $D < 0$: No real roots (complex)\n\n*Common mistake*: When $b = -7$, $-b = -(-7) = +7$.",
+      "isPinned": true,
+      "createdAt": "2026-10-08T23:18:13.163Z"
+    },
+    {
+      "id": "note-2",
+      "studentId": "demo-student-aarav",
+      "title": "Ohm's Law and Parallel Resistors",
+      "subject": "physics",
+      "topicId": "phys-elec-circuits",
+      "contentMarkdown": "### Resistor Rules\n- **Series**: $R_{eq} = R_1 + R_2$\n- **Parallel**: $\\frac{1}{R_{eq}} = \\frac{1}{R_1} + \\frac{1}{R_2}$\n- Remember: Parallel resistance is ALWAYS less than the smallest resistor!",
+      "isPinned": false,
+      "createdAt": "2026-10-07T23:18:13.163Z"
+    }
+  ],
+  "unlockedAchievementIds": [
+    "ach-first-step",
+    "ach-streak-3",
+    "ach-math-solver",
+    "ach-vision-lab"
+  ],
+  "conversations": []
+}

@@ -1,0 +1,82 @@
+[
+  {
+    "id": "math-01",
+    "subject": "math",
+    "grade": 9,
+    "topic": "Linear Equations",
+    "language": "en",
+    "question": "Solve the system of equations: 2x + 3y = 12 and x - y = 1. Explain step by step.",
+    "expected_answer": "x = 3, y = 2",
+    "required_concepts": ["Substitution or Elimination method", "Simultaneous linear equations"],
+    "rubric": {
+      "numerical_correctness": 1.0,
+      "step_by_step_clarity": 1.0,
+      "grade_appropriateness": 1.0,
+      "pedagogical_safety": 1.0
+    }
+  },
+  {
+    "id": "math-02",
+    "subject": "math",
+    "grade": 10,
+    "topic": "Quadratic Equations",
+    "language": "en",
+    "question": "Find the roots of 2x^2 - 7x + 3 = 0 using the quadratic formula. State the discriminant first.",
+    "expected_answer": "Discriminant D = 25, roots are x = 3 and x = 1/2",
+    "required_concepts": ["Quadratic formula", "Discriminant b^2 - 4ac"],
+    "rubric": {
+      "numerical_correctness": 1.0,
+      "step_by_step_clarity": 1.0,
+      "grade_appropriateness": 1.0,
+      "pedagogical_safety": 1.0
+    }
+  },
+  {
+    "id": "math-03",
+    "subject": "math",
+    "grade": 8,
+    "topic": "Fractions & Arithmetic",
+    "language": "en",
+    "question": "Simplify: 3/4 + 2/5 - 1/2. Show the common denominator clearly.",
+    "expected_answer": "13/20",
+    "required_concepts": ["Lowest Common Multiple (LCM)", "Fraction addition/subtraction"],
+    "rubric": {
+      "numerical_correctness": 1.0,
+      "step_by_step_clarity": 1.0,
+      "grade_appropriateness": 1.0,
+      "pedagogical_safety": 1.0
+    }
+  },
+  {
+    "id": "math-04",
+    "subject": "math",
+    "grade": 10,
+    "topic": "Trigonometry",
+    "language": "te",
+    "question": "ఒక లంబకోణ త్రిభుజంలో ఎదుటి భుజం 3 సెం.మీ, కర్ణం 5 సెం.మీ అయితే sin θ మరియు cos θ విలువలను కనుగొనండి.",
+    "expected_answer": "sin θ = 3/5, cos θ = 4/5 (ఆసన్న భుజం = 4 సెం.మీ)",
+    "required_concepts": ["పైథాగరస్ సిద్ధాంతం", "త్రికోణమితి నిష్పత్తులు"],
+    "rubric": {
+      "numerical_correctness": 1.0,
+      "step_by_step_clarity": 1.0,
+      "grade_appropriateness": 1.0,
+      "language_quality": 1.0
+    }
+  },
+  {
+    "id": "math-05",
+    "subject": "math",
+    "grade": 10,
+    "topic": "Arithmetic Progressions",
+    "language": "hi",
+    "question": "एक समांतर श्रेढ़ी (AP) 3, 8, 13, 18, ... का 10वाँ पद ज्ञात कीजिए।",
+    "expected_answer": "a_10 = 48 (a = 3, d = 5)",
+    "required_concepts": ["AP का n-वाँ पद সূত্র a_n = a + (n-1)d"],
+    "rubric": {
+      "numerical_correctness": 1.0,
+      "step_by_step_clarity": 1.0,
+      "grade_appropriateness": 1.0,
+      "language_quality": 1.0
+    }
+  }
+]

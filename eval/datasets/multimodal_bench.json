@@ -1,0 +1,29 @@
+[
+  {
+    "id": "vision-01",
+    "modality": "image",
+    "type": "handwritten_equation",
+    "description": "Handwritten quadratic equation with clear handwriting: '3x^2 + 5x - 2 = 0'",
+    "expected_transcription": "3x^2 + 5x - 2 = 0",
+    "expected_solving_steps": "Discriminant D = 5^2 - 4(3)(-2) = 25 + 24 = 49. Roots: (-5 +/- 7) / 6 -> x = 1/3 or x = -2",
+    "uncertainty_level": "low"
+  },
+  {
+    "id": "vision-02",
+    "modality": "image",
+    "type": "handwritten_ambiguous",
+    "description": "Scribbled physics formula with ambiguous symbols: 'v = u + ?t' where symbol is smudged",
+    "expected_transcription": "v = u + [unclear]t",
+    "expected_behavior": "Highlight uncertainty, politely ask student to verify if the symbol is acceleration 'a'",
+    "uncertainty_level": "high"
+  },
+  {
+    "id": "vision-03",
+    "modality": "image",
+    "type": "circuit_diagram",
+    "description": "Diagram of two resistors R1=4 ohm and R2=6 ohm connected in series to a 20V battery",
+    "expected_transcription": "Series circuit: R1 = 4 ohm, R2 = 6 ohm, V = 20V",
+    "expected_solving_steps": "R_total = 4 + 6 = 10 ohms, Current I = V / R_total = 20 / 10 = 2 A",
+    "uncertainty_level": "low"
+  }
+]

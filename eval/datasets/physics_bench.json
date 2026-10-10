@@ -1,0 +1,66 @@
+[
+  {
+    "id": "phys-01",
+    "subject": "physics",
+    "grade": 9,
+    "topic": "Motion & Kinematics",
+    "language": "en",
+    "question": "A car accelerates uniformly from rest to 20 m/s in 5 seconds. Calculate its acceleration and the distance traveled during this time.",
+    "expected_answer": "Acceleration a = 4 m/s^2, Distance s = 50 m",
+    "required_concepts": ["Equations of motion: v = u + at, s = ut + (1/2)at^2"],
+    "rubric": {
+      "numerical_correctness": 1.0,
+      "unit_consistency": 1.0,
+      "step_by_step_clarity": 1.0,
+      "grade_appropriateness": 1.0
+    }
+  },
+  {
+    "id": "phys-02",
+    "subject": "physics",
+    "grade": 10,
+    "topic": "Electricity & Ohm's Law",
+    "language": "en",
+    "question": "Two resistors of 6 ohms and 3 ohms are connected in parallel across a 12V battery. Find the equivalent resistance and the total circuit current.",
+    "expected_answer": "Equivalent resistance R_eq = 2 ohms, Total current I = 6 A",
+    "required_concepts": ["Resistors in parallel 1/R = 1/R1 + 1/R2", "Ohm's Law V = IR"],
+    "rubric": {
+      "numerical_correctness": 1.0,
+      "unit_consistency": 1.0,
+      "step_by_step_clarity": 1.0,
+      "grade_appropriateness": 1.0
+    }
+  },
+  {
+    "id": "phys-03",
+    "subject": "physics",
+    "grade": 10,
+    "topic": "Light Optics",
+    "language": "te",
+    "question": "ఒక పుటాకార దర్పణం (concave mirror) నాభ్యాంతరం f = -15 cm. వస్తువు దూరం u = -30 cm అయితే ప్రతిబింబ దూరం v మరియు ఆవర్ధనం m ను కనుగొనండి.",
+    "expected_answer": "v = -30 cm (దర్పణ కేంద్రం వద్ద నిజ ప్రతిబింబం), ఆవర్ధనం m = -1",
+    "required_concepts": ["దర్పణ సూత్రం 1/f = 1/v + 1/u", "సంజ్ఞా సంప్రదాయం (sign convention)"],
+    "rubric": {
+      "numerical_correctness": 1.0,
+      "unit_consistency": 1.0,
+      "step_by_step_clarity": 1.0,
+      "language_quality": 1.0
+    }
+  },
+  {
+    "id": "phys-04",
+    "subject": "physics",
+    "grade": 9,
+    "topic": "Work and Energy",
+    "language": "en",
+    "question": "A 2 kg stone is dropped from a height of 10 m. What is its kinetic energy just before hitting the ground? Take g = 9.8 m/s^2.",
+    "expected_answer": "196 Joules (by Conservation of Mechanical Energy)",
+    "required_concepts": ["Gravitational potential energy Ep = mgh", "Conservation of energy"],
+    "rubric": {
+      "numerical_correctness": 1.0,
+      "unit_consistency": 1.0,
+      "step_by_step_clarity": 1.0,
+      "grade_appropriateness": 1.0
+    }
+  }
+]

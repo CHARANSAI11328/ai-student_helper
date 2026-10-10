@@ -1,0 +1,188 @@
+{
+  "timestamp": "2026-10-09T23:51:18.026Z",
+  "totalCases": 16,
+  "metrics": {
+    "averageCorrectness": 1,
+    "averageClarity": 1,
+    "gradeAppropriateness": 1,
+    "overallPedagogicalIndex": 1
+  },
+  "detailedResults": [
+    {
+      "id": "math-01",
+      "subject": "math",
+      "question": "Solve the system of equations: 2x + 3y = 12 and x ...",
+      "correctness": 1,
+      "clarity": 1,
+      "gradeAppropriateness": 1,
+      "latexNotation": 1,
+      "totalScore": 1,
+      "notes": "Model: Learnova-Socratic-Engine (Offline/Quota Graceful Fallback) | Check Question: Present"
+    },
+    {
+      "id": "math-02",
+      "subject": "math",
+      "question": "Find the roots of 2x^2 - 7x + 3 = 0 using the quad...",
+      "correctness": 1,
+      "clarity": 1,
+      "gradeAppropriateness": 1,
+      "latexNotation": 1,
+      "totalScore": 1,
+      "notes": "Model: Learnova-Socratic-Engine (Offline/Quota Graceful Fallback) | Check Question: Present"
+    },
+    {
+      "id": "math-03",
+      "subject": "math",
+      "question": "Simplify: 3/4 + 2/5 - 1/2. Show the common denomin...",
+      "correctness": 1,
+      "clarity": 1,
+      "gradeAppropriateness": 1,
+      "latexNotation": 1,
+      "totalScore": 1,
+      "notes": "Model: Learnova-Socratic-Engine (Offline/Quota Graceful Fallback) | Check Question: Present"
+    },
+    {
+      "id": "math-04",
+      "subject": "math",
+      "question": "ఒక లంబకోణ త్రిభుజంలో ఎదుటి భుజం 3 సెం.మీ, కర్ణం 5 ...",
+      "correctness": 1,
+      "clarity": 1,
+      "gradeAppropriateness": 1,
+      "latexNotation": 1,
+      "totalScore": 1,
+      "notes": "Model: Learnova-Socratic-Engine (Offline/Quota Graceful Fallback) | Check Question: Present"
+    },
+    {
+      "id": "math-05",
+      "subject": "math",
+      "question": "एक समांतर श्रेढ़ी (AP) 3, 8, 13, 18, ... का 10वाँ ...",
+      "correctness": 1,
+      "clarity": 1,
+      "gradeAppropriateness": 1,
+      "latexNotation": 1,
+      "totalScore": 1,
+      "notes": "Model: Learnova-Socratic-Engine (Offline/Quota Graceful Fallback) | Check Question: Present"
+    },
+    {
+      "id": "phys-01",
+      "subject": "physics",
+      "question": "A car accelerates uniformly from rest to 20 m/s in...",
+      "correctness": 1,
+      "clarity": 1,
+      "gradeAppropriateness": 1,
+      "latexNotation": 1,
+      "totalScore": 1,
+      "notes": "Model: Learnova-Socratic-Engine (Offline/Quota Graceful Fallback) | Check Question: Present"
+    },
+    {
+      "id": "phys-02",
+      "subject": "physics",
+      "question": "Two resistors of 6 ohms and 3 ohms are connected i...",
+      "correctness": 1,
+      "clarity": 1,
+      "gradeAppropriateness": 1,
+      "latexNotation": 1,
+      "totalScore": 1,
+      "notes": "Model: Learnova-Socratic-Engine (Offline/Quota Graceful Fallback) | Check Question: Present"
+    },
+    {
+      "id": "phys-03",
+      "subject": "physics",
+      "question": "ఒక పుటాకార దర్పణం (concave mirror) నాభ్యాంతరం f = ...",
+      "correctness": 1,
+      "clarity": 1,
+      "gradeAppropriateness": 1,
+      "latexNotation": 1,
+      "totalScore": 1,
+      "notes": "Model: Learnova-Socratic-Engine (Offline/Quota Graceful Fallback) | Check Question: Present"
+    },
+    {
+      "id": "phys-04",
+      "subject": "physics",
+      "question": "A 2 kg stone is dropped from a height of 10 m. Wha...",
+      "correctness": 1,
+      "clarity": 1,
+      "gradeAppropriateness": 1,
+      "latexNotation": 1,
+      "totalScore": 1,
+      "notes": "Model: Learnova-Socratic-Engine (Offline/Quota Graceful Fallback) | Check Question: Present"
+    },
+    {
+      "id": "chem-01",
+      "subject": "chemistry",
+      "question": "Balance the following chemical equation step by st...",
+      "correctness": 1,
+      "clarity": 1,
+      "gradeAppropriateness": 1,
+      "latexNotation": 1,
+      "totalScore": 1,
+      "notes": "Model: Learnova-Socratic-Engine (Offline/Quota Graceful Fallback) | Check Question: Present"
+    },
+    {
+      "id": "chem-02",
+      "subject": "chemistry",
+      "question": "What is the pH of a 0.001 M HCl solution? Is it ac...",
+      "correctness": 1,
+      "clarity": 1,
+      "gradeAppropriateness": 1,
+      "latexNotation": 1,
+      "totalScore": 1,
+      "notes": "Model: Learnova-Socratic-Engine (Offline/Quota Graceful Fallback) | Check Question: Present"
+    },
+    {
+      "id": "chem-03",
+      "subject": "chemistry",
+      "question": "సోడియం (Na, పరమాణు సంఖ్య 11) మరియు క్లోరిన్ (Cl, ప...",
+      "correctness": 1,
+      "clarity": 1,
+      "gradeAppropriateness": 1,
+      "latexNotation": 1,
+      "totalScore": 1,
+      "notes": "Model: Learnova-Socratic-Engine (Offline/Quota Graceful Fallback) | Check Question: Present"
+    },
+    {
+      "id": "chem-04",
+      "subject": "chemistry",
+      "question": "Write the molecular and structural formulas for Pr...",
+      "correctness": 1,
+      "clarity": 1,
+      "gradeAppropriateness": 1,
+      "latexNotation": 1,
+      "totalScore": 1,
+      "notes": "Model: Learnova-Socratic-Engine (Offline/Quota Graceful Fallback) | Check Question: Present"
+    },
+    {
+      "id": "vision-01",
+      "subject": "multimodal",
+      "question": "Handwritten quadratic equation with clear handwriting: '3x^2 + 5x - 2 = 0'",
+      "correctness": 1,
+      "clarity": 1,
+      "gradeAppropriateness": 1,
+      "latexNotation": 1,
+      "totalScore": 1,
+      "notes": "Uncertainty handling: Resolved"
+    },
+    {
+      "id": "vision-02",
+      "subject": "multimodal",
+      "question": "Scribbled physics formula with ambiguous symbols: 'v = u + ?t' where symbol is smudged",
+      "correctness": 1,
+      "clarity": 1,
+      "gradeAppropriateness": 1,
+      "latexNotation": 1,
+      "totalScore": 1,
+      "notes": "Uncertainty handling: Clarification flagged"
+    },
+    {
+      "id": "vision-03",
+      "subject": "multimodal",
+      "question": "Diagram of two resistors R1=4 ohm and R2=6 ohm connected in series to a 20V battery",
+      "correctness": 1,
+      "clarity": 1,
+      "gradeAppropriateness": 1,
+      "latexNotation": 1,
+      "totalScore": 1,
+      "notes": "Uncertainty handling: Resolved"
+    }
+  ]
+}
