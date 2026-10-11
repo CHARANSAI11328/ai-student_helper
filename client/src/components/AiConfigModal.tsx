@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Sparkles, Check, AlertCircle, X, Shield, Cpu, RefreshCw, ExternalLink } from './icons.js';
+import { discoverWorkingGeminiModels } from '../api/client.js';
 
 interface AiConfigModalProps {
   isOpen: boolean;
@@ -74,30 +75,22 @@ export const AiConfigModal: React.FC<AiConfigModalProps> = ({ isOpen, onClose, o
     const startTime = Date.now();
 
     try {
-      // Direct browser verification via Google's CORS-enabled endpoint
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models?key=${cleanKey}`
-      );
-      const data = await res.json();
+      const discovery = await discoverWorkingGeminiModels(cleanKey);
 
-      if (data.error) {
+      if (discovery.error) {
         setTestResult({
           valid: false,
-          error: data.error.message || 'Invalid Gemini API key. Please check your credentials from Google AI Studio.'
+          error: discovery.error
         });
         setIsTesting(false);
         return;
       }
 
       const latencyMs = Date.now() - startTime;
-      const modelNames: string[] = (data.models || [])
-        .map((m: any) => m.name.replace('models/', ''))
-        .filter((name: string) => name.includes('gemini'));
-
       setTestResult({
         valid: true,
         latencyMs,
-        models: modelNames.length > 0 ? modelNames : ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-2.0-flash']
+        models: discovery.models.length > 0 ? discovery.models : ['gemini-2.0-flash', 'gemini-1.5-flash']
       });
 
       // Also notify local backend if one is running
@@ -110,23 +103,6 @@ export const AiConfigModal: React.FC<AiConfigModalProps> = ({ isOpen, onClose, o
       } catch {}
 
     } catch (err: any) {
-      // If direct call had a network issue, attempt backend proxy as fallback
-      try {
-        const backendRes = await fetch('/api/config/test-key', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ apiKey: cleanKey }),
-        });
-        if (backendRes.ok) {
-          const contentType = backendRes.headers.get('content-type') || '';
-          if (contentType.includes('application/json')) {
-            const backendData = await backendRes.json();
-            setTestResult(backendData);
-            return;
-          }
-        }
-      } catch {}
-
       setTestResult({
         valid: false,
         error: `Network test failed: ${err.message || 'Unable to reach Google Gemini servers. Check your internet connection.'}`
@@ -147,29 +123,25 @@ export const AiConfigModal: React.FC<AiConfigModalProps> = ({ isOpen, onClose, o
     const startTime = Date.now();
 
     try {
-      // Validate key with Google first
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models?key=${cleanKey}`
-      );
-      const data = await res.json();
+      const discovery = await discoverWorkingGeminiModels(cleanKey);
 
-      if (data.error) {
+      if (discovery.error && discovery.error.includes('API key not valid')) {
         setTestResult({
           valid: false,
-          error: data.error.message || 'Invalid Gemini API key. Please check your credentials.'
+          error: discovery.error
         });
         setIsSaving(false);
         return;
       }
 
       const latencyMs = Date.now() - startTime;
-      const modelNames: string[] = (data.models || [])
-        .map((m: any) => m.name.replace('models/', ''))
-        .filter((name: string) => name.includes('gemini'));
+      const primaryModel = discovery.primaryModel || 'gemini-2.0-flash';
 
       // Save key under both keys in localStorage
       localStorage.setItem('learnova_gemini_api_key', cleanKey);
       localStorage.setItem('learnova_gemini_key', cleanKey);
+      localStorage.setItem('learnova_active_model', primaryModel);
+      localStorage.setItem('learnova_api_version', discovery.apiVersion);
 
       // Try notifying backend if running
       try {
@@ -185,7 +157,7 @@ export const AiConfigModal: React.FC<AiConfigModalProps> = ({ isOpen, onClose, o
       setTestResult({
         valid: true,
         latencyMs,
-        models: modelNames.length > 0 ? modelNames : ['gemini-1.5-flash', 'gemini-1.5-pro']
+        models: discovery.models.length > 0 ? discovery.models : [primaryModel]
       });
 
       if (onKeyUpdated) onKeyUpdated();
@@ -195,11 +167,12 @@ export const AiConfigModal: React.FC<AiConfigModalProps> = ({ isOpen, onClose, o
       // If offline or blocked by adblocker, save anyway and activate
       localStorage.setItem('learnova_gemini_api_key', cleanKey);
       localStorage.setItem('learnova_gemini_key', cleanKey);
+      localStorage.setItem('learnova_active_model', 'gemini-2.0-flash');
       setCurrentMode('live_ai');
       setMaskedKey(cleanKey.slice(0, 6) + '...' + cleanKey.slice(-4));
       setTestResult({
         valid: true,
-        models: ['gemini-1.5-flash']
+        models: ['gemini-2.0-flash']
       });
       if (onKeyUpdated) onKeyUpdated();
       setTimeout(() => onClose(), 1200);
@@ -214,6 +187,9 @@ export const AiConfigModal: React.FC<AiConfigModalProps> = ({ isOpen, onClose, o
   const handleUseDemo = async () => {
     localStorage.removeItem('learnova_gemini_api_key');
     localStorage.removeItem('learnova_gemini_key');
+    localStorage.removeItem('learnova_active_model');
+    localStorage.removeItem('learnova_discovered_models');
+    localStorage.removeItem('learnova_api_version');
     setApiKey('');
     setTestResult(null);
     setCurrentMode('demo_offline_engine');

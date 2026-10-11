@@ -67,7 +67,15 @@ export interface GenerateVisionOptions {
   apiKey?: string;
 }
 
-const FALLBACK_MODELS = ['gemini-1.5-flash', 'gemini-1.5-flash-8b', 'gemini-2.0-flash', 'gemini-1.5-pro'];
+const FALLBACK_MODELS = [
+  'gemini-2.0-flash',
+  'gemini-1.5-flash',
+  'gemini-1.5-flash-latest',
+  'gemini-2.0-flash-lite',
+  'gemini-1.5-flash-8b',
+  'gemini-1.5-pro',
+  'gemini-pro'
+];
 
 export async function generateGeminiTutorResponse(options: GenerateTextOptions): Promise<TutorResponse> {
   const client = getGeminiClient(options.apiKey);

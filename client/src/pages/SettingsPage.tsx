@@ -17,6 +17,7 @@ import {
   Check
 } from 'lucide-react';
 import { useApp } from '../context/AppContext.js';
+import { discoverWorkingGeminiModels } from '../api/client.js';
 
 export const SettingsPage: React.FC = () => {
   const {
@@ -275,6 +276,9 @@ export const SettingsPage: React.FC = () => {
                 if (!key) {
                   localStorage.removeItem('learnova_gemini_api_key');
                   localStorage.removeItem('learnova_gemini_key');
+                  localStorage.removeItem('learnova_active_model');
+                  localStorage.removeItem('learnova_discovered_models');
+                  localStorage.removeItem('learnova_api_version');
                   try {
                     await fetch('/api/config/set-key', {
                       method: 'POST',
@@ -286,18 +290,17 @@ export const SettingsPage: React.FC = () => {
                   return;
                 }
                 try {
-                  // Direct Google API validation
-                  const googleRes = await fetch(
-                    `https://generativelanguage.googleapis.com/v1beta/models?key=${key}`
-                  );
-                  const googleData = await googleRes.json();
-                  if (googleData.error) {
-                    addToast(googleData.error.message || 'Invalid Gemini API key.', 'error');
+                  const discovery = await discoverWorkingGeminiModels(key);
+                  if (discovery.error && discovery.error.includes('API key not valid')) {
+                    addToast(discovery.error, 'error');
                     return;
                   }
 
+                  const primaryModel = discovery.primaryModel || 'gemini-2.0-flash';
                   localStorage.setItem('learnova_gemini_api_key', key);
                   localStorage.setItem('learnova_gemini_key', key);
+                  localStorage.setItem('learnova_active_model', primaryModel);
+                  localStorage.setItem('learnova_api_version', discovery.apiVersion);
 
                   // Sync with local server if running
                   try {
@@ -308,10 +311,11 @@ export const SettingsPage: React.FC = () => {
                     });
                   } catch {}
 
-                  addToast('🎉 Gemini API Key verified & activated live!', 'success');
+                  addToast(`🎉 Verified ${primaryModel} (${discovery.apiVersion}) & activated live!`, 'success');
                 } catch (e: any) {
                   localStorage.setItem('learnova_gemini_api_key', key);
                   localStorage.setItem('learnova_gemini_key', key);
+                  localStorage.setItem('learnova_active_model', 'gemini-2.0-flash');
                   addToast('Gemini API key saved to local storage.', 'success');
                 }
               }}

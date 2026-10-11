@@ -49,6 +49,7 @@ export function getStoredApiKey(): string {
  * - Markdown fences (```json ... ``` or ``` ... ```)
  * - Leading / trailing conversational preambles
  * - Newline anomalies
+ * - LLM trailing commas and control characters
  */
 export function extractJsonFromText(rawText: string): any {
   if (!rawText || !rawText.trim()) {
@@ -69,23 +70,164 @@ export function extractJsonFromText(rawText: string): any {
     clean = clean.substring(firstBrace, lastBrace + 1);
   }
 
-  return JSON.parse(clean);
+  try {
+    return JSON.parse(clean);
+  } catch (initialErr) {
+    // Attempt repairs for common LLM JSON glitches (trailing commas, unescaped control chars)
+    try {
+      const repaired = clean
+        .replace(/,\s*([\]}])/g, '$1') // remove trailing commas before ] or }
+        .replace(/[\u0000-\u001F\u007F-\u009F]/g, (c) => (c === '\n' || c === '\r' || c === '\t' ? c : ''));
+      return JSON.parse(repaired);
+    } catch {
+      throw initialErr;
+    }
+  }
+}
+
+/**
+ * Discovers and prioritizes working Gemini models for the user's specific API key.
+ * Queries Google's ListModels endpoint across v1 and v1beta.
+ * Automatically scores and prioritizes models based on speed, vision capability, and current Google availability.
+ */
+export async function discoverWorkingGeminiModels(apiKey: string): Promise<{
+  models: string[];
+  apiVersion: 'v1' | 'v1beta';
+  primaryModel: string;
+  error?: string;
+}> {
+  const cleanKey = (apiKey || '').trim();
+  if (!cleanKey) {
+    return {
+      models: [],
+      apiVersion: 'v1beta',
+      primaryModel: 'gemini-1.5-flash',
+      error: 'No API key provided'
+    };
+  }
+
+  // 1. Check local cache (keyed by first 8 chars of key to refresh when user enters a new key)
+  const cacheKey = `learnova_models_${cleanKey.slice(0, 8)}`;
+  try {
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (Array.isArray(parsed.models) && parsed.models.length > 0 && parsed.timestamp && (Date.now() - parsed.timestamp < 3600000)) {
+        return {
+          models: parsed.models,
+          apiVersion: parsed.apiVersion || 'v1beta',
+          primaryModel: parsed.models[0],
+        };
+      }
+    }
+  } catch {}
+
+  // 2. Query Google ListModels endpoints (try v1beta and v1)
+  const apiVersions: ('v1beta' | 'v1')[] = ['v1beta', 'v1'];
+  let discoveredNames: string[] = [];
+  let successfulVersion: 'v1' | 'v1beta' = 'v1beta';
+  let apiErrorMessage = '';
+
+  for (const ver of apiVersions) {
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/${ver}/models?key=${cleanKey}`);
+      const data = await res.json();
+
+      if (data.error) {
+        apiErrorMessage = data.error.message || `API Error (${data.error.status || data.error.code})`;
+        // If it's an explicit key validation failure or permission denied, preserve error message
+        if (data.error.code === 400 || data.error.status === 'INVALID_ARGUMENT' || data.error.code === 403) {
+          break;
+        }
+        continue;
+      }
+
+      if (Array.isArray(data.models) && data.models.length > 0) {
+        // Filter for models that support generateContent
+        const validModels = data.models
+          .filter((m: any) => {
+            const methods = m.supportedGenerationMethods || [];
+            return methods.includes('generateContent') || methods.includes('generateMessage');
+          })
+          .map((m: any) => (m.name || '').replace(/^models\//, ''))
+          .filter((name: string) => name.toLowerCase().includes('gemini'));
+
+        if (validModels.length > 0) {
+          discoveredNames = validModels;
+          successfulVersion = ver;
+          break;
+        }
+      }
+    } catch (err: any) {
+      apiErrorMessage = err.message || 'Network request failed';
+    }
+  }
+
+  // 3. Smart Sorting: Prioritize newest, fastest, and most quota-generous models
+  const scoreModel = (name: string): number => {
+    const n = name.toLowerCase();
+    if (n.includes('2.0-flash') && !n.includes('lite')) return 100;
+    if (n.includes('1.5-flash-latest')) return 95;
+    if (n.includes('1.5-flash') && !n.includes('8b')) return 90;
+    if (n.includes('2.0-flash-lite')) return 85;
+    if (n.includes('1.5-flash-8b')) return 80;
+    if (n.includes('2.5-flash')) return 75;
+    if (n.includes('2.0-pro')) return 70;
+    if (n.includes('1.5-pro-latest')) return 65;
+    if (n.includes('1.5-pro')) return 60;
+    if (n.includes('gemini-pro')) return 50;
+    return 10;
+  };
+
+  if (discoveredNames.length > 0) {
+    discoveredNames.sort((a, b) => scoreModel(b) - scoreModel(a));
+  } else {
+    // Resilient fallback candidate list if ListModels was blocked by CORS or network, but key is valid
+    discoveredNames = [
+      'gemini-2.0-flash',
+      'gemini-1.5-flash',
+      'gemini-1.5-flash-latest',
+      'gemini-1.5-flash-8b',
+      'gemini-1.5-pro',
+      'gemini-pro'
+    ];
+  }
+
+  // 4. Cache in localStorage for snappy subsequent calls
+  try {
+    localStorage.setItem(cacheKey, JSON.stringify({
+      models: discoveredNames,
+      apiVersion: successfulVersion,
+      timestamp: Date.now()
+    }));
+    localStorage.setItem('learnova_discovered_models', JSON.stringify(discoveredNames));
+    localStorage.setItem('learnova_api_version', successfulVersion);
+    localStorage.setItem('learnova_active_model', discoveredNames[0]);
+  } catch {}
+
+  return {
+    models: discoveredNames,
+    apiVersion: successfulVersion,
+    primaryModel: discoveredNames[0],
+    error: discoveredNames.length > 0 && !apiErrorMessage.includes('API key not valid') ? undefined : apiErrorMessage
+  };
 }
 
 export async function checkApiHealth(): Promise<SystemHealth> {
+  const key = getStoredApiKey();
+  const cachedModel = localStorage.getItem('learnova_active_model') || 'gemini-2.0-flash';
   try {
     const res = await fetch(`${API_BASE}/health`);
     if (!res.ok) throw new Error('Unreachable');
     return await res.json();
   } catch {
-    const key = getStoredApiKey();
     return {
       status: 'ok',
       service: 'Learnova AI (Client PWA Mode)',
       version: '1.0.0',
       geminiConfigured: Boolean(key),
-      defaultModelText: 'gemini-1.5-flash',
-      defaultModelVision: 'gemini-1.5-flash',
+      defaultModelText: cachedModel,
+      defaultModelVision: cachedModel,
       mode: key ? 'live_ai' : 'offline_socratic',
       timestamp: new Date().toISOString()
     };
@@ -182,20 +324,32 @@ export async function askTutor(params: AskTutorParams): Promise<AskTutorResponse
   // 2. Second attempt: Direct Client-to-Gemini Call using student's API key
   let directErrorMessage = '';
   if (apiKey) {
-    // Priority order of models to maximize success rate across Google AI quotas
-    const candidateModels = ['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-1.5-pro'];
+    // Dynamic Model Discovery: Determine which models and API versions are active for this key
+    const discovery = await discoverWorkingGeminiModels(apiKey);
+    const candidateModels = discovery.models.length > 0
+      ? discovery.models
+      : ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-latest', 'gemini-1.5-flash-8b', 'gemini-1.5-pro', 'gemini-pro'];
+
+    // Try discovered API version first, then fallback to alternate version (v1 <-> v1beta)
+    const apiVersionsToTry: ('v1' | 'v1beta')[] = discovery.apiVersion === 'v1' ? ['v1', 'v1beta'] : ['v1beta', 'v1'];
+
+    let modelSucceeded = false;
 
     for (const modelName of candidateModels) {
-      try {
-        const geminiRes = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{
-                parts: [{
-                  text: `You are an elite, child-friendly Socratic STEM tutor for Grade ${params.grade} school students in ${params.subject}.
+      if (modelSucceeded) break;
+      const cleanName = modelName.replace(/^models\//, '');
+
+      for (const apiVer of apiVersionsToTry) {
+        try {
+          const geminiRes = await fetch(
+            `https://generativelanguage.googleapis.com/${apiVer}/models/${cleanName}:generateContent?key=${apiKey}`,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: [{
+                  parts: [{
+                    text: `You are an elite, child-friendly Socratic STEM tutor for Grade ${params.grade} school students in ${params.subject}.
 Language mode: ${params.language || 'English'} (keep mathematical formulas strictly in standard LaTeX notation).
 Question: "${params.question}".
 
@@ -219,43 +373,71 @@ Break down the problem using this structured 9-part pedagogical schema and retur
   },
   "suggestedNextTopic": "Suggested next topic to study"
 }`
-                }]
-              }],
-              generationConfig: {
-                temperature: 0.3,
-                maxOutputTokens: 2048
-              }
-            })
-          }
-        );
-
-        if (geminiRes.ok) {
-          const geminiData = await geminiRes.json();
-          const rawText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (rawText) {
-            const parsed = extractJsonFromText(rawText);
-            // Ensure essential fields exist
-            if (parsed.stepByStepReasoning && parsed.finalAnswer) {
-              return {
-                success: true,
-                explanation: parsed,
-                metadata: {
-                  modelUsed: `Google ${modelName} (Direct Live AI)`,
-                  isDemo: false,
-                  executionTimeMs: Date.now() - startTime,
-                  timestamp: new Date().toISOString()
+                  }]
+                }],
+                generationConfig: {
+                  temperature: 0.3,
+                  maxOutputTokens: 2048
                 }
-              };
+              })
+            }
+          );
+
+          if (geminiRes.ok) {
+            const geminiData = await geminiRes.json();
+            const rawText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (rawText) {
+              const parsed = extractJsonFromText(rawText);
+              // Ensure essential fields exist
+              if (parsed.stepByStepReasoning && parsed.finalAnswer) {
+                modelSucceeded = true;
+                // Cache active working model
+                try {
+                  localStorage.setItem('learnova_active_model', cleanName);
+                  localStorage.setItem('learnova_api_version', apiVer);
+                } catch {}
+
+                return {
+                  success: true,
+                  explanation: parsed,
+                  metadata: {
+                    modelUsed: `Google ${cleanName} (${apiVer} Live AI)`,
+                    isDemo: false,
+                    executionTimeMs: Date.now() - startTime,
+                    timestamp: new Date().toISOString()
+                  }
+                };
+              }
+            }
+          } else {
+            const errData = await geminiRes.json().catch(() => ({}));
+            const errMsg = errData.error?.message || `HTTP ${geminiRes.status}`;
+            directErrorMessage = errMsg;
+
+            // If API key is explicitly invalid, stop wasting queries
+            if (errMsg.toLowerCase().includes('api key not valid') || errData.error?.code === 400) {
+              break;
+            }
+
+            // If 404 (model not found on this version), try the other API version or next model
+            if (geminiRes.status === 404) {
+              continue;
+            }
+
+            // If rate-limited (429), note quota exhaustion and proceed to next candidate model
+            if (geminiRes.status === 429) {
+              directErrorMessage = `Rate limit on ${cleanName}; trying next model...`;
+              break;
             }
           }
-        } else {
-          const errData = await geminiRes.json().catch(() => ({}));
-          directErrorMessage = errData.error?.message || `HTTP ${geminiRes.status}`;
-          console.warn(`[Learnova AI] Model ${modelName} call status ${geminiRes.status}:`, directErrorMessage);
+        } catch (err: any) {
+          directErrorMessage = err.message || 'Network error';
         }
-      } catch (err: any) {
-        directErrorMessage = err.message || 'Network error';
-        console.warn(`[Learnova AI] Failed attempt on ${modelName}:`, err);
+      }
+
+      // Stop trying other models if key is completely invalid
+      if (directErrorMessage.toLowerCase().includes('api key not valid')) {
+        break;
       }
     }
   }
@@ -373,22 +555,34 @@ export async function analyzeImage(params: AnalyzeImageParams): Promise<AnalyzeI
       }
 
       if (rawBase64) {
-        const visionRes = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{
-                parts: [
-                  {
-                    inlineData: {
-                      mimeType: mimeType,
-                      data: rawBase64,
-                    }
-                  },
-                  {
-                    text: `Analyze this student STEM handwriting or diagram. Transcribe any equations into clean LaTeX. Return strictly raw JSON:
+        const discovery = await discoverWorkingGeminiModels(apiKey);
+        const visionModels = discovery.models.length > 0
+          ? discovery.models
+          : ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-latest'];
+        const apiVersionsToTry: ('v1' | 'v1beta')[] = discovery.apiVersion === 'v1' ? ['v1', 'v1beta'] : ['v1beta', 'v1'];
+
+        for (const modelName of visionModels) {
+          const cleanName = modelName.replace(/^models\//, '');
+          let visionSucceeded = false;
+
+          for (const apiVer of apiVersionsToTry) {
+            try {
+              const visionRes = await fetch(
+                `https://generativelanguage.googleapis.com/${apiVer}/models/${cleanName}:generateContent?key=${apiKey}`,
+                {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    contents: [{
+                      parts: [
+                        {
+                          inlineData: {
+                            mimeType: mimeType,
+                            data: rawBase64,
+                          }
+                        },
+                        {
+                          text: `Analyze this student STEM handwriting or diagram. Transcribe any equations into clean LaTeX. Return strictly raw JSON:
 {
   "extractedText": "The transcribed equation or question in LaTeX format",
   "confidence": 0.95,
@@ -396,44 +590,52 @@ export async function analyzeImage(params: AnalyzeImageParams): Promise<AnalyzeI
   "clarificationPrompt": "",
   "boundingBoxes": []
 }`
+                        }
+                      ]
+                    }],
+                    generationConfig: {
+                      temperature: 0.1,
+                      maxOutputTokens: 1024
+                    }
+                  })
+                }
+              );
+
+              if (visionRes.ok) {
+                const vData = await visionRes.json();
+                const vText = vData.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (vText) {
+                  const parsedTranscription: VisionTranscription = extractJsonFromText(vText);
+                  let solution: TutorExplanation | null = null;
+                  if (params.mode !== 'transcribe_only' && parsedTranscription.extractedText) {
+                    const tutorResp = await askTutor({
+                      question: parsedTranscription.extractedText,
+                      subject: params.subject,
+                      grade: params.grade,
+                      language: 'en'
+                    });
+                    solution = tutorResp.explanation;
                   }
-                ]
-              }],
-              generationConfig: {
-                temperature: 0.1,
-                maxOutputTokens: 1024
-              }
-            })
-          }
-        );
 
-        if (visionRes.ok) {
-          const vData = await visionRes.json();
-          const vText = vData.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (vText) {
-            const parsedTranscription: VisionTranscription = extractJsonFromText(vText);
-            let solution: TutorExplanation | null = null;
-            if (params.mode !== 'transcribe_only' && parsedTranscription.extractedText) {
-              const tutorResp = await askTutor({
-                question: parsedTranscription.extractedText,
-                subject: params.subject,
-                grade: params.grade,
-                language: 'en'
-              });
-              solution = tutorResp.explanation;
+                  visionSucceeded = true;
+                  return {
+                    success: true,
+                    transcription: parsedTranscription,
+                    solution,
+                    metadata: {
+                      modelUsed: `Google ${cleanName} (${apiVer} Vision Live)`,
+                      isDemo: false,
+                      executionTimeMs: Date.now() - startTime,
+                    }
+                  };
+                }
+              }
+            } catch (vErr) {
+              // Try next version/model
             }
-
-            return {
-              success: true,
-              transcription: parsedTranscription,
-              solution,
-              metadata: {
-                modelUsed: 'Google Gemini 1.5 Flash Vision (Live Browser)',
-                isDemo: false,
-                executionTimeMs: Date.now() - startTime,
-              }
-            };
           }
+
+          if (visionSucceeded) break;
         }
       }
     } catch (visionErr) {
