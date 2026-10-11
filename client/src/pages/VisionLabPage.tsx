@@ -368,10 +368,10 @@ export const VisionLabPage: React.FC = () => {
             <div className="console-card-elevated rounded-3xl p-6 sm:p-7 border-white/10 shadow-2xl space-y-5 animate-fadeIn">
               <div className="flex items-center justify-between border-b border-white/10 pb-3">
                 <h3 className="font-bold text-sm text-white flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-brand-500" />
+                  <Sparkles className="h-4 w-4 text-cyan-400" />
                   <span>Socratic Step-by-Step Resolution</span>
                 </h3>
-                <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                <span className="text-xs font-mono font-semibold text-emerald-400">
                   Verified STEM Logic
                 </span>
               </div>
@@ -381,44 +381,52 @@ export const VisionLabPage: React.FC = () => {
                 {analysisResult.solution.stepByStepReasoning.map((step) => (
                   <div
                     key={step.stepNumber}
-                    className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-1.5 text-xs"
+                    className="p-4 rounded-2xl console-card border-white/10 space-y-2 text-xs"
                   >
-                    <p className="font-bold text-brand-700 dark:text-brand-300">
-                      Step {step.stepNumber}: {step.title}
-                    </p>
-                    <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+                    <div className="flex items-center gap-2">
+                      <span className="h-6 w-6 rounded-full bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 text-[11px] font-mono font-bold flex items-center justify-center">
+                        {step.stepNumber}
+                      </span>
+                      <p className="font-bold text-white font-display text-xs">
+                        {step.title}
+                      </p>
+                    </div>
+                    <p className="text-slate-300 leading-relaxed pl-8">
                       {step.explanation}
                     </p>
                     {step.mathExpression && (
-                      <MathRenderer content={`$$${step.mathExpression}$$`} />
+                      <div className="pl-8 pt-1">
+                        <MathRenderer content={`$$${step.mathExpression}$$`} />
+                      </div>
                     )}
                   </div>
                 ))}
               </div>
 
               {/* Final Answer */}
-              <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">
-                  Final Result:
+              <div className="p-5 rounded-2xl console-card-elevated border-emerald-500/30 bg-emerald-950/30 shadow-[0_0_20px_rgba(16,185,129,0.1)]">
+                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-emerald-300">
+                  Final Evaluated Result:
                 </span>
-                <div className="text-sm font-bold text-slate-900 dark:text-white mt-1">
+                <div className="text-base font-bold text-white mt-1">
                   <MathRenderer content={analysisResult.solution.finalAnswer} />
                 </div>
               </div>
 
               {/* Common Pitfall */}
-              <div className="p-3 bg-rose-50 dark:bg-rose-950/40 rounded-xl text-xs text-rose-800 dark:text-rose-300">
-                <strong>⚠️ Key Pitfall to Avoid:</strong> {analysisResult.solution.commonMistakes}
+              <div className="p-4 bg-rose-950/40 rounded-2xl border border-rose-500/30 text-xs text-rose-200">
+                <strong className="text-rose-300 font-mono">⚠️ Key Pitfall to Avoid: </strong>
+                <span>{analysisResult.solution.commonMistakes}</span>
               </div>
 
             </div>
           )}
 
           {!analysisResult && (
-            <div className="h-64 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center text-center p-6 text-slate-400">
-              <Camera className="h-8 w-8 mb-2 stroke-1" />
-              <p className="text-sm font-medium">Vision Analysis Ready</p>
-              <p className="text-xs mt-1">Upload a problem or pick a judge sample to view OCR and Socratic solutions side-by-side.</p>
+            <div className="h-72 rounded-3xl border border-dashed border-white/10 flex flex-col items-center justify-center text-center p-6 text-slate-400 console-card">
+              <Camera className="h-8 w-8 mb-3 text-cyan-400/60" />
+              <p className="text-sm font-semibold text-white font-display">Vision Analysis Ready</p>
+              <p className="text-xs text-slate-400 max-w-sm mt-1">Upload an equation photograph or select an instant judge benchmark sample above to trigger deep neural handwriting extraction.</p>
             </div>
           )}
 

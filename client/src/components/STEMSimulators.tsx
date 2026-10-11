@@ -216,20 +216,24 @@ export const STEMSimulators: React.FC = () => {
       {/* ======================================================== */}
       {/* 1. MATH SIMULATOR: QUADRATIC PARABOLA EXPLORER            */}
       {/* ======================================================== */}
+      {/* ======================================================== */}
+      {/* 1. MATH SIMULATOR: QUADRATIC PARABOLA EXPLORER            */}
+      {/* ======================================================== */}
       {activeTab === 'math' && (
-        <div className="mt-5 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Controls & Metrics */}
           <div className="lg:col-span-5 space-y-4">
-            <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+            <div className="console-card p-4 rounded-2xl border border-white/10">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  Current Quadratic Equation
+                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                  Governing Equation
                 </span>
-                <span className="text-xs font-mono px-2 py-0.5 bg-brand-100 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 rounded font-semibold">
-                  Standard Form
+                <span className="text-[10px] font-mono px-2 py-0.5 bg-cyan-950/80 text-cyan-300 border border-cyan-800/80 rounded-full font-semibold">
+                  Standard Polynomial
                 </span>
               </div>
-              <div className="text-center py-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700">
+              <div className="text-center py-3 bg-slate-950/80 rounded-xl border border-white/10 shadow-inner">
                 <MathRenderer
                   math={`y = ${a !== 1 ? (a === -1 ? '-' : a) : ''}x^2 ${b >= 0 ? `+ ${b}` : `- ${Math.abs(b)}`}x ${c >= 0 ? `+ ${c}` : `- ${Math.abs(c)}`}`}
                   displayMode
@@ -238,11 +242,11 @@ export const STEMSimulators: React.FC = () => {
             </div>
 
             {/* Sliders */}
-            <div className="space-y-3 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800 text-xs">
+            <div className="space-y-4 console-card p-4 rounded-2xl border border-white/10 text-xs">
               <div>
-                <div className="flex justify-between font-semibold mb-1">
-                  <span className="text-slate-700 dark:text-slate-300">Curvature Coefficient (a): {a}</span>
-                  <span className="text-slate-400">{a > 0 ? 'Opens Up (∪)' : a < 0 ? 'Opens Down (∩)' : 'Linear'}</span>
+                <div className="flex justify-between items-center font-semibold mb-1.5">
+                  <span className="text-slate-300 font-mono text-[11px]">Curvature (a): <strong className="text-cyan-400 font-bold">{a}</strong></span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white/5 text-slate-400 border border-white/10">{a > 0 ? 'Opens Up (∪)' : a < 0 ? 'Opens Down (∩)' : 'Linear'}</span>
                 </div>
                 <input
                   type="range"
@@ -251,14 +255,14 @@ export const STEMSimulators: React.FC = () => {
                   step="0.5"
                   value={a}
                   onChange={(e) => setA(Number(e.target.value) || 0.5)}
-                  className="w-full accent-brand-600"
+                  className="w-full accent-cyan-400 bg-slate-900 rounded-lg cursor-pointer h-2"
                 />
               </div>
 
               <div>
-                <div className="flex justify-between font-semibold mb-1">
-                  <span className="text-slate-700 dark:text-slate-300">Shift Coefficient (b): {b}</span>
-                  <span className="text-slate-400">Vertex X = {vertexX.toFixed(2)}</span>
+                <div className="flex justify-between items-center font-semibold mb-1.5">
+                  <span className="text-slate-300 font-mono text-[11px]">Shift (b): <strong className="text-cyan-400 font-bold">{b}</strong></span>
+                  <span className="text-[10px] font-mono text-slate-400">Vertex X = {vertexX.toFixed(2)}</span>
                 </div>
                 <input
                   type="range"
@@ -267,14 +271,14 @@ export const STEMSimulators: React.FC = () => {
                   step="0.5"
                   value={b}
                   onChange={(e) => setB(Number(e.target.value))}
-                  className="w-full accent-brand-600"
+                  className="w-full accent-cyan-400 bg-slate-900 rounded-lg cursor-pointer h-2"
                 />
               </div>
 
               <div>
-                <div className="flex justify-between font-semibold mb-1">
-                  <span className="text-slate-700 dark:text-slate-300">Y-Intercept (c): {c}</span>
-                  <span className="text-slate-400">At x = 0, y = {c}</span>
+                <div className="flex justify-between items-center font-semibold mb-1.5">
+                  <span className="text-slate-300 font-mono text-[11px]">Y-Intercept (c): <strong className="text-cyan-400 font-bold">{c}</strong></span>
+                  <span className="text-[10px] font-mono text-slate-400">At x = 0, y = {c}</span>
                 </div>
                 <input
                   type="range"
@@ -283,29 +287,29 @@ export const STEMSimulators: React.FC = () => {
                   step="1"
                   value={c}
                   onChange={(e) => setC(Number(e.target.value))}
-                  className="w-full accent-brand-600"
+                  className="w-full accent-cyan-400 bg-slate-900 rounded-lg cursor-pointer h-2"
                 />
               </div>
             </div>
 
             {/* Key Computed Properties */}
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="p-3 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-200 dark:border-slate-800">
-                <span className="text-slate-500 dark:text-slate-400 block text-[11px]">Discriminant (Δ)</span>
-                <span className={`font-bold font-mono text-sm ${discriminant > 0 ? 'text-emerald-500' : discriminant === 0 ? 'text-amber-500' : 'text-rose-500'}`}>
+            <div className="grid grid-cols-2 gap-3 text-xs">
+              <div className="p-3.5 console-card rounded-2xl border border-white/10">
+                <span className="text-slate-400 block text-[10px] font-mono uppercase tracking-wider mb-1">Discriminant (Δ)</span>
+                <span className={`font-bold font-mono text-base ${discriminant > 0 ? 'text-emerald-400' : discriminant === 0 ? 'text-amber-400' : 'text-rose-400'}`}>
                   {discriminant.toFixed(1)}
                 </span>
-                <span className="block text-[10px] text-slate-500">
-                  {discriminant > 0 ? '2 Real Roots' : discriminant === 0 ? '1 Real Root' : 'Complex Roots'}
+                <span className="block text-[10px] font-mono text-slate-500 mt-0.5">
+                  {discriminant > 0 ? '2 Distinct Roots' : discriminant === 0 ? '1 Repeated Root' : 'Complex Roots'}
                 </span>
               </div>
 
-              <div className="p-3 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-200 dark:border-slate-800">
-                <span className="text-slate-500 dark:text-slate-400 block text-[11px]">Vertex Coordinates</span>
-                <span className="font-bold font-mono text-sm text-brand-500">
+              <div className="p-3.5 console-card rounded-2xl border border-white/10">
+                <span className="text-slate-400 block text-[10px] font-mono uppercase tracking-wider mb-1">Vertex Coordinates</span>
+                <span className="font-bold font-mono text-base text-cyan-300">
                   ({vertexX.toFixed(1)}, {vertexY.toFixed(1)})
                 </span>
-                <span className="block text-[10px] text-slate-500">
+                <span className="block text-[10px] font-mono text-slate-500 mt-0.5">
                   {a > 0 ? 'Global Minimum' : 'Global Maximum'}
                 </span>
               </div>
@@ -313,27 +317,30 @@ export const STEMSimulators: React.FC = () => {
           </div>
 
           {/* SVG Coordinate Graph */}
-          <div className="lg:col-span-7 flex flex-col items-center justify-center bg-slate-950 p-4 rounded-2xl border border-slate-800 shadow-inner">
-            <div className="w-full flex items-center justify-between text-xs text-slate-400 mb-2 px-2">
-              <span className="font-mono text-[11px] text-brand-400">f(x) Coordinate Canvas</span>
-              <span>Grid: -8 to +8</span>
+          <div className="lg:col-span-7 flex flex-col items-center justify-center bg-slate-950/90 p-5 rounded-2xl border border-white/10 shadow-2xl relative">
+            <div className="w-full flex items-center justify-between text-xs text-slate-400 mb-3 px-1">
+              <span className="font-mono text-[11px] text-cyan-400 flex items-center gap-1.5 font-bold">
+                <span className="h-2 w-2 rounded-full bg-cyan-400"></span>
+                Cartesian Plane f(x)
+              </span>
+              <span className="font-mono text-[10px] text-slate-500">Domain [-8, +8]</span>
             </div>
 
-            <div className="relative w-full max-w-[380px] h-[260px] bg-slate-900 rounded-xl overflow-hidden border border-slate-800">
+            <div className="relative w-full max-w-[420px] h-[280px] bg-slate-950 rounded-xl overflow-hidden border border-white/15 shadow-inner">
               <svg viewBox="0 0 360 240" className="w-full h-full">
                 {/* Grid lines */}
                 {Array.from({ length: 17 }).map((_, i) => (
                   <React.Fragment key={i}>
-                    <line x1={i * 22.5} y1="0" x2={i * 22.5} y2="240" stroke="#334155" strokeWidth="0.5" strokeDasharray="2,2" />
-                    <line x1="0" y1={i * 15} x2="360" y2={i * 15} stroke="#334155" strokeWidth="0.5" strokeDasharray="2,2" />
+                    <line x1={i * 22.5} y1="0" x2={i * 22.5} y2="240" stroke="#1e293b" strokeWidth="0.75" strokeDasharray="3,3" />
+                    <line x1="0" y1={i * 15} x2="360" y2={i * 15} stroke="#1e293b" strokeWidth="0.75" strokeDasharray="3,3" />
                   </React.Fragment>
                 ))}
 
                 {/* Main Axes */}
-                <line x1="0" y1="120" x2="360" y2="120" stroke="#94a3b8" strokeWidth="1.5" />
-                <line x1="180" y1="0" x2="180" y2="240" stroke="#94a3b8" strokeWidth="1.5" />
+                <line x1="0" y1="120" x2="360" y2="120" stroke="#475569" strokeWidth="1.5" />
+                <line x1="180" y1="0" x2="180" y2="240" stroke="#475569" strokeWidth="1.5" />
 
-                {/* Parabola Curve */}
+                {/* Parabola Curve with Glow */}
                 <polyline
                   fill="none"
                   stroke="#38bdf8"
@@ -354,19 +361,19 @@ export const STEMSimulators: React.FC = () => {
 
                 {/* Real Roots Points */}
                 {root1 !== null && (
-                  <circle cx={180 + root1 * (360 / 16)} cy="120" r="4" fill="#34d399" />
+                  <circle cx={180 + root1 * (360 / 16)} cy="120" r="4.5" fill="#34d399" stroke="#022c22" strokeWidth="1.5" />
                 )}
                 {root2 !== null && (
-                  <circle cx={180 + root2 * (360 / 16)} cy="120" r="4" fill="#34d399" />
+                  <circle cx={180 + root2 * (360 / 16)} cy="120" r="4.5" fill="#34d399" stroke="#022c22" strokeWidth="1.5" />
                 )}
               </svg>
             </div>
 
-            <div className="mt-3 text-center text-xs text-slate-400">
+            <div className="mt-3 text-center text-xs text-slate-300 font-mono">
               {root1 !== null && root2 !== null ? (
                 <span>Roots: <strong className="text-emerald-400 font-mono">x₁ = {root1.toFixed(2)}</strong>, <strong className="text-emerald-400 font-mono">x₂ = {root2.toFixed(2)}</strong></span>
               ) : (
-                <span className="text-rose-400">Parabola does not intersect the x-axis (No Real Roots)</span>
+                <span className="text-rose-400">Δ &lt; 0: Curve does not intersect x-axis (No Real Roots)</span>
               )}
             </div>
           </div>
@@ -377,14 +384,14 @@ export const STEMSimulators: React.FC = () => {
       {/* 2. PHYSICS SIMULATOR: PROJECTILE CANNON                  */}
       {/* ======================================================== */}
       {activeTab === 'physics' && (
-        <div className="mt-5 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-5 space-y-4 text-xs">
             {/* Sliders */}
-            <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-3">
+            <div className="console-card p-4 rounded-2xl border border-white/10 space-y-4">
               <div>
-                <div className="flex justify-between font-semibold mb-1">
-                  <span className="text-slate-700 dark:text-slate-300">Launch Velocity (v₀): {velocity} m/s</span>
-                  <span className="text-amber-500 font-mono">{(velocity * 3.6).toFixed(0)} km/h</span>
+                <div className="flex justify-between items-center font-semibold mb-1.5">
+                  <span className="text-slate-300 font-mono text-[11px]">Velocity (v₀): <strong className="text-amber-400 font-bold">{velocity} m/s</strong></span>
+                  <span className="text-amber-400 font-mono text-[10px] px-2 py-0.5 rounded bg-amber-950/60 border border-amber-800/60">{(velocity * 3.6).toFixed(0)} km/h</span>
                 </div>
                 <input
                   type="range"
@@ -392,14 +399,14 @@ export const STEMSimulators: React.FC = () => {
                   max="60"
                   value={velocity}
                   onChange={(e) => setVelocity(Number(e.target.value))}
-                  className="w-full accent-amber-500"
+                  className="w-full accent-amber-400 bg-slate-900 rounded-lg cursor-pointer h-2"
                 />
               </div>
 
               <div>
-                <div className="flex justify-between font-semibold mb-1">
-                  <span className="text-slate-700 dark:text-slate-300">Elevation Angle (θ): {angleDeg}°</span>
-                  <span className="text-amber-500 font-mono">{angleDeg === 45 ? 'Max Range Angle (45°)' : `${angleDeg}°`}</span>
+                <div className="flex justify-between items-center font-semibold mb-1.5">
+                  <span className="text-slate-300 font-mono text-[11px]">Elevation (θ): <strong className="text-amber-400 font-bold">{angleDeg}°</strong></span>
+                  <span className="text-[10px] font-mono text-slate-400">{angleDeg === 45 ? 'Optimal (45°)' : `${angleDeg}°`}</span>
                 </div>
                 <input
                   type="range"
@@ -407,29 +414,29 @@ export const STEMSimulators: React.FC = () => {
                   max="80"
                   value={angleDeg}
                   onChange={(e) => setAngleDeg(Number(e.target.value))}
-                  className="w-full accent-amber-500"
+                  className="w-full accent-amber-400 bg-slate-900 rounded-lg cursor-pointer h-2"
                 />
               </div>
 
               {/* Gravitational Field Preset */}
               <div>
-                <span className="font-semibold text-slate-700 dark:text-slate-300 block mb-1.5">
+                <span className="font-mono text-[10px] uppercase tracking-wider text-slate-400 block mb-2">
                   Planetary Gravity Environment:
                 </span>
-                <div className="grid grid-cols-3 gap-1.5">
+                <div className="grid grid-cols-3 gap-2">
                   {[
-                    { label: 'Earth (9.8)', g: 9.8 },
-                    { label: 'Moon (1.6)', g: 1.62 },
-                    { label: 'Mars (3.7)', g: 3.71 }
+                    { label: 'Earth (9.8m/s²)', g: 9.8 },
+                    { label: 'Moon (1.6m/s²)', g: 1.62 },
+                    { label: 'Mars (3.7m/s²)', g: 3.71 }
                   ].map((p) => (
                     <button
                       key={p.label}
                       type="button"
                       onClick={() => setGravity(p.g)}
-                      className={`py-1 px-2 rounded-lg font-medium border text-[11px] transition-all ${
+                      className={`py-1.5 px-2 rounded-xl font-mono text-[10px] transition-all border ${
                         gravity === p.g
-                          ? 'bg-amber-500 text-white border-amber-500 font-bold shadow-sm'
-                          : 'bg-white dark:bg-slate-700 border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:border-amber-400'
+                          ? 'bg-amber-400 text-slate-950 border-amber-400 font-bold shadow-md shadow-amber-500/20'
+                          : 'bg-white/5 border-white/10 text-slate-300 hover:border-amber-400/50'
                       }`}
                     >
                       {p.label}
@@ -441,21 +448,21 @@ export const STEMSimulators: React.FC = () => {
 
             {/* Readout Telemetry */}
             <div className="grid grid-cols-3 gap-2">
-              <div className="p-3 bg-amber-50 dark:bg-amber-950/20 rounded-xl border border-amber-200 dark:border-amber-900/50">
-                <span className="text-amber-800 dark:text-amber-300 block text-[10px] font-medium">Max Height (H)</span>
-                <span className="font-bold font-mono text-sm text-amber-700 dark:text-amber-200">
+              <div className="p-3 console-card rounded-2xl border border-white/10 text-center">
+                <span className="text-slate-400 block text-[9px] font-mono uppercase tracking-wider mb-0.5">Max Apex (H)</span>
+                <span className="font-bold font-mono text-sm text-amber-300">
                   {maxHeight.toFixed(1)} m
                 </span>
               </div>
-              <div className="p-3 bg-indigo-50 dark:bg-indigo-950/20 rounded-xl border border-indigo-200 dark:border-indigo-900/50">
-                <span className="text-indigo-800 dark:text-indigo-300 block text-[10px] font-medium">Total Range (R)</span>
-                <span className="font-bold font-mono text-sm text-indigo-700 dark:text-indigo-200">
+              <div className="p-3 console-card rounded-2xl border border-white/10 text-center">
+                <span className="text-slate-400 block text-[9px] font-mono uppercase tracking-wider mb-0.5">Total Range (R)</span>
+                <span className="font-bold font-mono text-sm text-cyan-300">
                   {totalRange.toFixed(1)} m
                 </span>
               </div>
-              <div className="p-3 bg-emerald-50 dark:bg-emerald-950/20 rounded-xl border border-emerald-200 dark:border-emerald-900/50">
-                <span className="text-emerald-800 dark:text-emerald-300 block text-[10px] font-medium">Flight Time (T)</span>
-                <span className="font-bold font-mono text-sm text-emerald-700 dark:text-emerald-200">
+              <div className="p-3 console-card rounded-2xl border border-white/10 text-center">
+                <span className="text-slate-400 block text-[9px] font-mono uppercase tracking-wider mb-0.5">Flight Time (T)</span>
+                <span className="font-bold font-mono text-sm text-emerald-300">
                   {flightTime.toFixed(2)} s
                 </span>
               </div>
@@ -465,50 +472,53 @@ export const STEMSimulators: React.FC = () => {
               type="button"
               onClick={launchProjectile}
               disabled={isLaunching}
-              className="w-full py-2.5 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white font-bold rounded-xl shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 active:scale-95 transition-all"
+              className="w-full py-3 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold font-display rounded-2xl shadow-xl shadow-amber-500/20 flex items-center justify-center gap-2 active:scale-95 transition-all disabled:opacity-50"
             >
               <Play className="w-4 h-4 fill-current" />
-              <span>{isLaunching ? 'Projectile in Flight...' : 'Fire Cannon!'}</span>
+              <span>{isLaunching ? 'Trajectory in Flight...' : 'Simulate Launch Trajectory'}</span>
             </button>
           </div>
 
           {/* Physics Trajectory Canvas */}
-          <div className="lg:col-span-7 flex flex-col items-center justify-center bg-slate-950 p-4 rounded-2xl border border-slate-800 shadow-inner">
-            <div className="w-full flex items-center justify-between text-xs text-slate-400 mb-2 px-2">
-              <span className="font-mono text-[11px] text-amber-400">Trajectory Field (Kinematics)</span>
-              <span>Apex = {maxHeight.toFixed(1)}m</span>
+          <div className="lg:col-span-7 flex flex-col items-center justify-center bg-slate-950/90 p-5 rounded-2xl border border-white/10 shadow-2xl relative">
+            <div className="w-full flex items-center justify-between text-xs text-slate-400 mb-3 px-1">
+              <span className="font-mono text-[11px] text-amber-400 flex items-center gap-1.5 font-bold">
+                <span className="h-2 w-2 rounded-full bg-amber-400 animate-ping"></span>
+                Kinematics Ballistics Field
+              </span>
+              <span className="font-mono text-[10px] text-slate-500">Apex = {maxHeight.toFixed(1)}m</span>
             </div>
 
-            <div className="relative w-full max-w-[380px] h-[220px] bg-slate-900 rounded-xl overflow-hidden border border-slate-800">
+            <div className="relative w-full max-w-[420px] h-[240px] bg-slate-950 rounded-xl overflow-hidden border border-white/15 shadow-inner">
               <svg viewBox="0 0 360 200" className="w-full h-full">
                 {/* Ground */}
-                <line x1="0" y1="180" x2="360" y2="180" stroke="#475569" strokeWidth="2" />
-                <rect x="0" y="180" width="360" height="20" fill="#1e293b" />
+                <line x1="0" y1="180" x2="360" y2="180" stroke="#334155" strokeWidth="2" />
+                <rect x="0" y="180" width="360" height="20" fill="#0f172a" />
 
                 {/* Trajectory Guide Arc */}
                 <polyline
                   fill="none"
-                  stroke="#f59e0b"
+                  stroke="#fbbf24"
                   strokeWidth="2.5"
                   strokeDasharray="4,4"
                   points={generateProjectilePath()}
                 />
 
                 {/* Projectile Cannon Base */}
-                <circle cx="20" cy="180" r="8" fill="#64748b" />
+                <circle cx="20" cy="180" r="8" fill="#475569" stroke="#94a3b8" strokeWidth="1.5" />
 
                 {/* Flying Ball */}
                 <circle
                   cx={ballScreenX}
                   cy={ballScreenY}
                   r="6"
-                  fill="#fbbf24"
+                  fill="#f59e0b"
                   stroke="#ffffff"
                   strokeWidth="2"
                 />
               </svg>
             </div>
-            <p className="mt-2 text-xs text-slate-400 text-center">
+            <p className="mt-3 text-xs text-slate-400 text-center font-mono">
               Formula: <MathRenderer math="y(x) = x\\tan\\theta - \\frac{g x^2}{2 v_0^2 \\cos^2\\theta}" inline />
             </p>
           </div>
@@ -519,10 +529,10 @@ export const STEMSimulators: React.FC = () => {
       {/* 3. CHEMISTRY SIMULATOR: REACTION BALANCER & ELEMENTS     */}
       {/* ======================================================== */}
       {activeTab === 'chemistry' && (
-        <div className="mt-5 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-6 space-y-4 text-xs">
-            <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
-              <span className="font-bold text-slate-700 dark:text-slate-300 block">
+            <div className="console-card p-4 rounded-2xl border border-white/10 space-y-2.5">
+              <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-emerald-400 block">
                 Select Reaction to Balance:
               </span>
               <div className="flex flex-wrap gap-1.5">
@@ -531,10 +541,10 @@ export const STEMSimulators: React.FC = () => {
                     key={rxn}
                     type="button"
                     onClick={() => setReactionInput(rxn)}
-                    className={`px-2.5 py-1.5 rounded-lg font-mono text-[11px] border transition-all ${
+                    className={`px-3 py-1.5 rounded-xl font-mono text-[11px] border transition-all ${
                       reactionInput === rxn
-                        ? 'bg-emerald-600 text-white border-emerald-600 font-bold shadow-sm'
-                        : 'bg-white dark:bg-slate-700 border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:border-emerald-500'
+                        ? 'bg-emerald-400 text-slate-950 border-emerald-400 font-bold shadow-md shadow-emerald-500/20'
+                        : 'bg-white/5 border-white/10 text-slate-300 hover:border-emerald-400/50'
                     }`}
                   >
                     {rxn}
@@ -544,28 +554,28 @@ export const STEMSimulators: React.FC = () => {
             </div>
 
             {/* Balanced Output Card */}
-            <div className="bg-emerald-50 dark:bg-emerald-950/20 p-4 rounded-xl border border-emerald-200 dark:border-emerald-900/50">
-              <span className="text-[11px] font-bold text-emerald-800 dark:text-emerald-300 block mb-1 uppercase tracking-wider">
-                Stoichiometrically Balanced Equation
+            <div className="console-card-elevated p-4 rounded-2xl border border-emerald-500/30">
+              <span className="text-[10px] font-mono font-bold text-emerald-400 block mb-1.5 uppercase tracking-wider">
+                Stoichiometrically Balanced Output
               </span>
-              <div className="py-2 text-center bg-white dark:bg-slate-900 rounded-lg border border-emerald-200 dark:border-emerald-800/60 shadow-inner">
+              <div className="py-3 text-center bg-slate-950/90 rounded-xl border border-white/10 shadow-inner">
                 <MathRenderer math={currentBalanced.balanced} displayMode />
               </div>
-              <p className="mt-2 text-emerald-700 dark:text-emerald-300 text-xs">
+              <p className="mt-2.5 text-slate-300 text-xs leading-relaxed">
                 {currentBalanced.explanation}
               </p>
             </div>
 
             {/* Atom Balance Table */}
-            <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
-              <span className="font-semibold text-slate-700 dark:text-slate-300 block mb-2">
+            <div className="console-card p-4 rounded-2xl border border-white/10">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-slate-400 block mb-2.5">
                 Conservation of Mass (Atom Count per Side):
               </span>
               <div className="grid grid-cols-2 gap-2">
                 {currentBalanced.atoms.map((a) => (
-                  <div key={a.element} className="flex justify-between p-2 bg-white dark:bg-slate-700 rounded-lg">
-                    <span className="font-bold text-slate-800 dark:text-white">Element {a.element}:</span>
-                    <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">{a.count} Atoms on both sides</span>
+                  <div key={a.element} className="flex justify-between items-center p-2.5 bg-slate-950/80 rounded-xl border border-white/5">
+                    <span className="font-bold text-white font-mono text-xs">Element {a.element}:</span>
+                    <span className="font-mono text-emerald-400 font-bold text-[11px]">{a.count} Atoms Equilibrated</span>
                   </div>
                 ))}
               </div>
@@ -573,9 +583,9 @@ export const STEMSimulators: React.FC = () => {
           </div>
 
           {/* Element Inspector */}
-          <div className="lg:col-span-6 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-800 text-xs space-y-3">
-            <span className="font-bold text-slate-700 dark:text-slate-300 block">
-              Quick Periodic Table Inspector (Click Element):
+          <div className="lg:col-span-6 console-card p-4 rounded-2xl border border-white/10 text-xs space-y-3.5">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-cyan-400 block">
+              Quick Periodic Table Element Inspector:
             </span>
             <div className="grid grid-cols-4 gap-2">
               {Object.keys(elementDatabase).map((sym) => (
@@ -583,39 +593,39 @@ export const STEMSimulators: React.FC = () => {
                   key={sym}
                   type="button"
                   onClick={() => setSelectedElement(sym)}
-                  className={`p-2 rounded-xl text-center border transition-all ${
+                  className={`p-2.5 rounded-xl text-center border transition-all ${
                     selectedElement === sym
-                      ? 'bg-brand-600 text-white border-brand-600 font-bold shadow-md scale-105'
-                      : 'bg-white dark:bg-slate-700 border-slate-200 dark:border-slate-600 hover:border-brand-500 text-slate-800 dark:text-slate-200'
+                      ? 'bg-cyan-500 text-slate-950 border-cyan-400 font-bold shadow-lg shadow-cyan-500/30 scale-105'
+                      : 'bg-white/5 border-white/10 hover:border-cyan-400/50 text-white'
                   }`}
                 >
-                  <span className="text-[10px] block opacity-75">{elementDatabase[sym].z}</span>
-                  <span className="text-base font-extrabold block">{sym}</span>
-                  <span className="text-[10px] block truncate">{elementDatabase[sym].name}</span>
+                  <span className="text-[10px] font-mono block opacity-60">Z={elementDatabase[sym].z}</span>
+                  <span className="text-lg font-extrabold font-display block leading-tight">{sym}</span>
+                  <span className="text-[10px] font-mono block truncate opacity-80">{elementDatabase[sym].name}</span>
                 </button>
               ))}
             </div>
 
             {/* Detailed Selected Element Card */}
             {selectedElement && elementDatabase[selectedElement] && (
-              <div className="p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700">
-                <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+              <div className="p-4 bg-slate-950/90 rounded-2xl border border-white/10 mt-2">
+                <div className="flex items-center justify-between pb-2.5 border-b border-white/10">
                   <div>
-                    <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                    <h4 className="text-sm font-bold text-white font-display">
                       {elementDatabase[selectedElement].name} ({selectedElement})
                     </h4>
-                    <span className="text-[11px] text-slate-500">Atomic Number: {elementDatabase[selectedElement].z}</span>
+                    <span className="text-[10px] font-mono text-cyan-400">Atomic Number: {elementDatabase[selectedElement].z}</span>
                   </div>
                   <div className="text-right">
-                    <span className="text-[11px] text-slate-500 block">Standard Atomic Mass</span>
-                    <span className="font-mono font-bold text-brand-600 dark:text-brand-400">
+                    <span className="text-[10px] font-mono text-slate-400 block">Standard Atomic Mass</span>
+                    <span className="font-mono font-bold text-cyan-300 text-xs">
                       {elementDatabase[selectedElement].mass} u
                     </span>
                   </div>
                 </div>
-                <div className="mt-2 text-slate-600 dark:text-slate-400">
-                  <p className="mb-1"><strong>Valence State:</strong> {elementDatabase[selectedElement].valence}</p>
-                  <p>{elementDatabase[selectedElement].summary}</p>
+                <div className="mt-2.5 text-slate-300 text-xs space-y-1">
+                  <p><strong className="text-cyan-400 font-mono text-[11px]">Valence State:</strong> {elementDatabase[selectedElement].valence}</p>
+                  <p className="leading-relaxed text-slate-400">{elementDatabase[selectedElement].summary}</p>
                 </div>
               </div>
             )}

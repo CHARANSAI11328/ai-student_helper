@@ -33,21 +33,21 @@ export const Footer: React.FC = () => {
           </div>
 
           <div>
-            <h4 className="font-semibold text-slate-900 dark:text-white mb-2 text-xs uppercase tracking-wider">
+            <h4 className="font-mono font-bold text-white mb-3 text-xs uppercase tracking-wider text-cyan-400">
               STEM Subjects
             </h4>
-            <ul className="space-y-1.5">
-              <li><span className="hover:text-brand-500 cursor-pointer">{t.subjects.math} (Algebra, Geometry, AP)</span></li>
-              <li><span className="hover:text-brand-500 cursor-pointer">{t.subjects.physics} (Mechanics, Circuits, Optics)</span></li>
-              <li><span className="hover:text-brand-500 cursor-pointer">{t.subjects.chemistry} (Reactions, Acids, Bonding)</span></li>
+            <ul className="space-y-1.5 text-slate-300">
+              <li><span className="hover:text-cyan-400 cursor-pointer transition-colors">{t.subjects.math} (Algebra, Geometry, AP)</span></li>
+              <li><span className="hover:text-cyan-400 cursor-pointer transition-colors">{t.subjects.physics} (Mechanics, Circuits, Optics)</span></li>
+              <li><span className="hover:text-cyan-400 cursor-pointer transition-colors">{t.subjects.chemistry} (Reactions, Acids, Bonding)</span></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-semibold text-slate-900 dark:text-white mb-2 text-xs uppercase tracking-wider">
+            <h4 className="font-mono font-bold text-white mb-3 text-xs uppercase tracking-wider text-purple-400">
               Multilingual & Voice
             </h4>
-            <ul className="space-y-1.5">
+            <ul className="space-y-1.5 text-slate-300">
               <li><span>English (Curriculum standard)</span></li>
               <li><span>తెలుగు (Telugu explanations)</span></li>
               <li><span>हिन्दी (Hindi explanations)</span></li>
@@ -57,11 +57,11 @@ export const Footer: React.FC = () => {
 
         </div>
 
-        <div className="pt-6 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-[11px]">
+        <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-[11px] text-slate-400">
+          <p>
             © {new Date().getFullYear()} Learnova AI. Designed for National & State Board STEM Curriculums.
           </p>
-          <p className="flex items-center gap-1 text-[11px]">
+          <p className="flex items-center gap-1.5">
             Crafted with <Heart className="h-3 w-3 text-rose-500 fill-rose-500" /> for equitable school education.
           </p>
         </div>

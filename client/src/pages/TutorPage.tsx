@@ -239,17 +239,17 @@ export const TutorPage: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 h-[calc(100vh-4rem)] flex flex-col gap-4">
       
       {/* TOP CONFIGURATION STRIP */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div className="console-card-elevated rounded-2xl p-4 border-white/10 shadow-2xl flex flex-wrap items-center justify-between gap-3 text-xs">
         
         {/* Subject Tabs */}
-        <div className="flex items-center gap-1.5">
-          <span className="font-semibold text-slate-500 mr-1">Subject:</span>
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-slate-400 mr-1">Domain:</span>
           <button
             onClick={() => setSubject('math')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-semibold transition-all ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-semibold border transition-all ${
               subject === 'math'
-                ? 'bg-blue-600 text-white shadow-sm'
-                : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
+                ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 shadow-[0_0_15px_rgba(6,182,212,0.15)]'
+                : 'console-card text-slate-400 hover:text-slate-200 border-white/5'
             }`}
           >
             <Calculator className="h-3.5 w-3.5" />
@@ -258,10 +258,10 @@ export const TutorPage: React.FC = () => {
 
           <button
             onClick={() => setSubject('physics')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-semibold transition-all ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-semibold border transition-all ${
               subject === 'physics'
-                ? 'bg-purple-600 text-white shadow-sm'
-                : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
+                ? 'bg-purple-500/20 text-purple-300 border-purple-500/40 shadow-[0_0_15px_rgba(168,85,247,0.15)]'
+                : 'console-card text-slate-400 hover:text-slate-200 border-white/5'
             }`}
           >
             <Atom className="h-3.5 w-3.5" />
@@ -270,10 +270,10 @@ export const TutorPage: React.FC = () => {
 
           <button
             onClick={() => setSubject('chemistry')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-semibold transition-all ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-semibold border transition-all ${
               subject === 'chemistry'
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
+                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.15)]'
+                : 'console-card text-slate-400 hover:text-slate-200 border-white/5'
             }`}
           >
             <FlaskConical className="h-3.5 w-3.5" />
@@ -284,11 +284,11 @@ export const TutorPage: React.FC = () => {
         {/* Grade & Style Context */}
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5">
-            <span className="font-semibold text-slate-500">{t.common.grade}:</span>
+            <span className="font-mono text-[11px] font-bold text-slate-400">{t.common.grade}:</span>
             <select
               value={grade}
               onChange={(e) => setGrade(Number(e.target.value))}
-              className="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 font-semibold focus:outline-none"
+              className="px-2.5 py-1 rounded-xl border border-white/10 bg-slate-900 text-slate-200 font-semibold focus:outline-none focus:border-cyan-500/50"
             >
               {[6, 7, 8, 9, 10, 11, 12].map((g) => (
                 <option key={g} value={g}>Class {g}</option>
@@ -297,11 +297,11 @@ export const TutorPage: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-1.5">
-            <span className="font-semibold text-slate-500 hidden sm:inline">Style:</span>
+            <span className="font-mono text-[11px] font-bold text-slate-400 hidden sm:inline">Pedagogy:</span>
             <select
               value={style}
               onChange={(e) => setStyle(e.target.value as any)}
-              className="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 font-semibold focus:outline-none"
+              className="px-2.5 py-1 rounded-xl border border-white/10 bg-slate-900 text-slate-200 font-semibold focus:outline-none focus:border-cyan-500/50"
             >
               <option value="step_by_step">{t.tutor.styleStepByStep}</option>
               <option value="simple">{t.tutor.styleSimple}</option>
@@ -310,28 +310,28 @@ export const TutorPage: React.FC = () => {
           </div>
 
           {/* Workspace Mode: Chat vs Scratchpad Slate */}
-          <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+          <div className="flex items-center gap-1 console-card p-1 rounded-xl border border-white/10">
             <button
               type="button"
               onClick={() => setActiveWorkspaceTab('chat')}
-              className={`px-3 py-1.5 rounded-lg font-semibold transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 activeWorkspaceTab === 'chat'
-                  ? 'bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-300 shadow-sm'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-cyan-500 text-slate-950 font-bold shadow-md shadow-cyan-500/20'
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
-              💬 Chat Tutor
+              Dialogue Feed
             </button>
             <button
               type="button"
               onClick={() => setActiveWorkspaceTab('slate')}
-              className={`px-3 py-1.5 rounded-lg font-semibold transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 activeWorkspaceTab === 'slate'
-                  ? 'bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-300 shadow-sm'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-cyan-500 text-slate-950 font-bold shadow-md shadow-cyan-500/20'
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
-              ✏️ Blackboard Scratchpad
+              Blackboard Canvas
             </button>
           </div>
         </div>
@@ -449,7 +449,7 @@ export const TutorPage: React.FC = () => {
                         {msg.explanation.requiredConcepts.map((concept, idx) => (
                           <span
                             key={idx}
-                            className="text-xs px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 font-medium border border-indigo-100 dark:border-indigo-900"
+                            className="text-xs px-2.5 py-1 rounded-lg bg-indigo-950/70 text-indigo-300 font-mono border border-indigo-500/30"
                           >
                             {concept}
                           </span>
@@ -459,29 +459,29 @@ export const TutorPage: React.FC = () => {
 
                     {/* 3. Step-by-Step Derivation */}
                     <div>
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5 flex items-center gap-1">
-                        <Sparkles className="h-3.5 w-3.5 text-brand-500" />
+                      <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 mb-2.5 flex items-center gap-1.5">
+                        <Sparkles className="h-3.5 w-3.5" />
                         <span>{t.tutor.stepByStepReasoning}</span>
                       </h4>
                       <div className="space-y-3">
                         {msg.explanation.stepByStepReasoning.map((step) => (
                           <div
                             key={step.stepNumber}
-                            className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2"
+                            className="p-4 rounded-2xl console-card border-white/10 space-y-2"
                           >
                             <div className="flex items-center gap-2">
-                              <span className="h-5 w-5 rounded-full bg-brand-500 text-white text-[11px] font-bold flex items-center justify-center">
+                              <span className="h-6 w-6 rounded-full bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 text-[11px] font-mono font-bold flex items-center justify-center">
                                 {step.stepNumber}
                               </span>
-                              <h5 className="font-bold text-xs text-slate-900 dark:text-white">
+                              <h5 className="font-bold text-xs text-white font-display">
                                 {step.title}
                               </h5>
                             </div>
-                            <p className="text-slate-700 dark:text-slate-300 leading-relaxed text-xs sm:text-sm pl-7">
+                            <p className="text-slate-300 leading-relaxed text-xs sm:text-sm pl-8">
                               {step.explanation}
                             </p>
                             {step.mathExpression && (
-                              <div className="pl-7 pt-1">
+                              <div className="pl-8 pt-1">
                                 <MathRenderer content={`$$${step.mathExpression}$$`} />
                               </div>
                             )}
@@ -491,60 +491,60 @@ export const TutorPage: React.FC = () => {
                     </div>
 
                     {/* 4. Final Answer Box */}
-                    <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300 mb-1 flex items-center gap-1">
+                    <div className="p-5 rounded-2xl console-card-elevated border-emerald-500/40 bg-emerald-950/30 shadow-[0_0_25px_rgba(16,185,129,0.1)]">
+                      <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-300 mb-1 flex items-center gap-1.5">
                         <Check className="h-4 w-4" />
                         <span>{t.tutor.finalAnswer}</span>
                       </h4>
-                      <div className="text-base font-bold text-slate-900 dark:text-white mt-1">
+                      <div className="text-base font-bold text-white mt-1">
                         <MathRenderer content={msg.explanation.finalAnswer} />
                       </div>
                     </div>
 
                     {/* 5. Why the Method Works & 6. Real World Analogy */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700">
-                        <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-1.5">
-                          <Lightbulb className="h-3.5 w-3.5 text-amber-500" />
+                      <div className="p-4 rounded-2xl console-card border-white/10">
+                        <h4 className="text-xs font-mono font-bold text-amber-300 mb-1 flex items-center gap-1.5">
+                          <Lightbulb className="h-3.5 w-3.5 text-amber-400" />
                           <span>{t.tutor.whyMethodWorks}</span>
                         </h4>
-                        <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        <p className="text-xs text-slate-300 leading-relaxed">
                           {msg.explanation.whyMethodWorks}
                         </p>
                       </div>
 
-                      <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700">
-                        <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-1.5">
-                          <Sparkles className="h-3.5 w-3.5 text-brand-500" />
+                      <div className="p-4 rounded-2xl console-card border-white/10">
+                        <h4 className="text-xs font-mono font-bold text-cyan-300 mb-1 flex items-center gap-1.5">
+                          <Sparkles className="h-3.5 w-3.5 text-cyan-400" />
                           <span>{t.tutor.realWorldAnalogy}</span>
                         </h4>
-                        <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                        <p className="text-xs text-slate-300 leading-relaxed">
                           {msg.explanation.realWorldAnalogy}
                         </p>
                       </div>
                     </div>
 
                     {/* 7. Common Mistake to Avoid */}
-                    <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-xs text-rose-800 dark:text-rose-300 flex items-start gap-2.5">
-                      <AlertCircle className="h-4 w-4 text-rose-500 shrink-0 mt-0.5" />
+                    <div className="p-4 rounded-2xl bg-rose-950/40 border border-rose-500/30 text-xs text-rose-200 flex items-start gap-2.5">
+                      <AlertCircle className="h-4 w-4 text-rose-400 shrink-0 mt-0.5" />
                       <div>
-                        <strong>{t.tutor.commonMistake}: </strong>
+                        <strong className="text-rose-300 font-mono">{t.tutor.commonMistake}: </strong>
                         <span>{msg.explanation.commonMistakes}</span>
                       </div>
                     </div>
 
                     {/* 8. Quick Understanding Check Question (Interactive inside card!) */}
                     {msg.explanation.understandingCheckQuestion && (
-                      <div className="p-4 rounded-xl bg-blue-50/60 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 space-y-3">
-                        <h4 className="text-xs font-bold text-blue-900 dark:text-blue-200 flex items-center gap-1.5">
-                          <FileQuestion className="h-4 w-4 text-blue-600" />
+                      <div className="p-5 rounded-2xl console-card-elevated border-cyan-500/30 space-y-3">
+                        <h4 className="text-xs font-mono font-bold text-cyan-300 flex items-center gap-1.5">
+                          <FileQuestion className="h-4 w-4 text-cyan-400" />
                           <span>{t.tutor.checkUnderstanding}</span>
                         </h4>
-                        <p className="text-xs sm:text-sm font-medium text-slate-800 dark:text-slate-200">
+                        <p className="text-xs sm:text-sm font-medium text-white">
                           {msg.explanation.understandingCheckQuestion.question}
                         </p>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
                           {msg.explanation.understandingCheckQuestion.options.map((opt, optIdx) => {
                             const isSelected = selectedOptions[msg.id] === optIdx;
                             const isCorrect = optIdx === msg.explanation!.understandingCheckQuestion.correctOptionIndex;
@@ -561,14 +561,14 @@ export const TutorPage: React.FC = () => {
                                   }
                                 }}
                                 disabled={hasAnswered}
-                                className={`p-2.5 rounded-lg text-xs text-left font-medium border transition-all ${
+                                className={`p-3 rounded-xl text-xs text-left font-medium border transition-all ${
                                   hasAnswered
                                     ? isCorrect
-                                      ? 'bg-emerald-100 border-emerald-400 text-emerald-900 dark:bg-emerald-900 dark:text-white'
+                                      ? 'bg-emerald-950/80 border-emerald-500 text-emerald-200 shadow-sm'
                                       : isSelected
-                                      ? 'bg-rose-100 border-rose-400 text-rose-900 dark:bg-rose-900 dark:text-white'
-                                      : 'bg-white dark:bg-slate-800 opacity-50'
-                                    : 'bg-white dark:bg-slate-800 hover:border-brand-500 text-slate-800 dark:text-slate-200'
+                                      ? 'bg-rose-950/80 border-rose-500 text-rose-200'
+                                      : 'console-card opacity-40 border-white/5 text-slate-500'
+                                    : 'console-card border-white/10 hover:border-cyan-500/50 text-slate-200 hover:text-white'
                                 }`}
                               >
                                 {opt}
@@ -578,8 +578,10 @@ export const TutorPage: React.FC = () => {
                         </div>
 
                         {selectedOptions[msg.id] !== undefined && (
-                          <div className="pt-2 text-xs font-medium text-slate-700 dark:text-slate-300">
-                            <strong>{selectedOptions[msg.id] === msg.explanation.understandingCheckQuestion.correctOptionIndex ? '✅ Correct!' : '💡 Explanation:'} </strong>
+                          <div className="pt-2 text-xs font-mono font-medium text-slate-300">
+                            <strong className={selectedOptions[msg.id] === msg.explanation.understandingCheckQuestion.correctOptionIndex ? 'text-emerald-400' : 'text-amber-400'}>
+                              {selectedOptions[msg.id] === msg.explanation.understandingCheckQuestion.correctOptionIndex ? '✓ Correct verification: ' : '💡 Analysis: '}
+                            </strong>
                             <span>{msg.explanation.understandingCheckQuestion.explanation}</span>
                           </div>
                         )}
@@ -587,15 +589,15 @@ export const TutorPage: React.FC = () => {
                     )}
 
                     {/* 9. Suggested Next Topic & Practice Button */}
-                    <div className="pt-2 flex flex-wrap items-center justify-between gap-3 text-xs border-t border-slate-100 dark:border-slate-800">
-                      <div className="text-slate-500">
+                    <div className="pt-3 flex flex-wrap items-center justify-between gap-3 text-xs border-t border-white/10">
+                      <div className="text-slate-400 font-mono text-[11px]">
                         <span>{t.tutor.suggestedNext}: </span>
-                        <strong className="text-slate-800 dark:text-slate-200">{msg.explanation.suggestedNextTopic}</strong>
+                        <strong className="text-white font-sans">{msg.explanation.suggestedNextTopic}</strong>
                       </div>
 
                       <button
                         onClick={() => handleAskQuestion(`Give me a practice problem on "${msg.explanation!.suggestedNextTopic}" and guide me step-by-step.`)}
-                        className="px-3 py-1.5 rounded-lg bg-brand-50 text-brand-700 dark:bg-brand-950 dark:text-brand-300 font-semibold hover:bg-brand-100 transition-colors"
+                        className="px-4 py-2 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-semibold transition-all"
                       >
                         {t.tutor.practiceSimilar} →
                       </button>
@@ -611,9 +613,9 @@ export const TutorPage: React.FC = () => {
 
         {/* Loading Indicator */}
         {isLoading && (
-          <div className="flex items-center gap-3 p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-500 max-w-sm animate-pulse">
-            <Sparkles className="h-4 w-4 text-brand-500 animate-spin" />
-            <span>{t.common.loading}</span>
+          <div className="flex items-center gap-3 p-4 rounded-2xl console-card border-white/10 text-xs text-slate-300 max-w-sm animate-pulse">
+            <Sparkles className="h-4 w-4 text-cyan-400 animate-spin" />
+            <span className="font-mono">Synthesizing Socratic explanation...</span>
           </div>
         )}
 
@@ -665,30 +667,30 @@ export const TutorPage: React.FC = () => {
         </form>
 
         {/* Quick Suggestion Pills */}
-        <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-slate-500 pt-1">
-          <span>Try asking:</span>
+        <div className="flex flex-wrap items-center gap-2 text-[11px] text-slate-400 pt-1">
+          <span className="font-mono text-slate-500">Fast Prompts:</span>
           <button
             onClick={() => handleAskQuestion('Find roots of 2x^2 - 7x + 3 = 0 using quadratic formula')}
-            className="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+            className="px-2.5 py-1 rounded-xl console-card border-white/10 hover:border-cyan-500/40 text-slate-300 hover:text-cyan-300 font-mono transition-all"
           >
             2x² - 7x + 3 = 0
           </button>
           <button
             onClick={() => handleAskQuestion('How to calculate equivalent resistance for 6 ohm and 3 ohm in parallel?')}
-            className="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+            className="px-2.5 py-1 rounded-xl console-card border-white/10 hover:border-cyan-500/40 text-slate-300 hover:text-cyan-300 font-mono transition-all"
           >
             Parallel Resistors
           </button>
           <button
             onClick={() => handleAskQuestion('Balance chemical equation: Fe + H2O -> Fe3O4 + H2')}
-            className="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+            className="px-2.5 py-1 rounded-xl console-card border-white/10 hover:border-cyan-500/40 text-slate-300 hover:text-cyan-300 font-mono transition-all"
           >
             Balance Fe + H₂O
           </button>
           {language === 'te' && (
             <button
               onClick={() => handleAskQuestion('2x^2 - 7x + 3 = 0 వర్గ సమీకరణం యొక్క మూలాలను కనుగొనండి')}
-              className="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+              className="px-2.5 py-1 rounded-xl console-card border-white/10 hover:border-cyan-500/40 text-slate-300 hover:text-cyan-300 font-mono transition-all"
             >
               తెలుగు వర్గ మూలాలు
             </button>

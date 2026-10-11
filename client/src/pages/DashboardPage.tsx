@@ -13,7 +13,8 @@ import {
   Atom,
   FlaskConical,
   TrendingUp,
-  Search
+  Search,
+  Camera
 } from 'lucide-react';
 import { useApp } from '../context/AppContext.js';
 import { getProgressStats } from '../api/client.js';

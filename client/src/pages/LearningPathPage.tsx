@@ -7,10 +7,11 @@ import {
   Clock,
   Sparkles,
   ArrowRight,
-  Filter,
   Calculator,
   Atom,
-  FlaskConical
+  FlaskConical,
+  Compass,
+  ChevronRight
 } from 'lucide-react';
 import { useApp } from '../context/AppContext.js';
 import { getLearningPath } from '../api/client.js';
@@ -36,77 +37,85 @@ export const LearningPathPage: React.FC = () => {
       case 'mastered':
         return {
           label: 'Mastered',
-          bg: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border-emerald-200',
+          bg: 'bg-emerald-950/80 text-emerald-300 border-emerald-800/80',
+          dotBg: 'bg-emerald-400',
           icon: CheckCircle2
         };
       case 'needs_revision':
         return {
           label: 'Needs Revision',
-          bg: 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border-amber-200',
+          bg: 'bg-amber-950/80 text-amber-300 border-amber-800/80',
+          dotBg: 'bg-amber-400',
           icon: AlertTriangle
         };
       case 'in_progress':
         return {
           label: 'In Progress',
-          bg: 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 border-blue-200',
+          bg: 'bg-cyan-950/80 text-cyan-300 border-cyan-800/80',
+          dotBg: 'bg-cyan-400',
           icon: Clock
         };
       default:
         return {
           label: 'Not Started',
-          bg: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border-slate-200',
+          bg: 'bg-white/5 text-slate-400 border-white/10',
+          dotBg: 'bg-slate-500',
           icon: Sparkles
         };
     }
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fadeIn">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fadeIn text-slate-100">
       
       {/* HEADER */}
-      <div className="space-y-2">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300 text-xs font-semibold">
+      <div className="space-y-3">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-800/80 text-[11px] font-mono font-semibold">
           <Map className="h-3.5 w-3.5" />
-          <span>Dynamic Pedagogical Roadmap</span>
+          <span>Dynamic Pedagogical Trajectory</span>
+          <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
         </div>
-        <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-          {t.nav.learningPath}
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-display">
+          Adaptive Knowledge Graph &{' '}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-300 to-purple-400">
+            Skill Sequence
+          </span>
         </h1>
-        <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl">
-          Your adaptive learning sequence automatically recalculates when you complete quizzes. Topics adapt between <em>Mastered</em>, <em>In Progress</em>, and <em>Needs Revision</em>.
+        <p className="text-sm text-slate-400 max-w-2xl leading-relaxed">
+          Your personalized syllabus dependency tree recalculates dynamically as you solve quizzes. Topics adapt intelligently between <strong className="text-emerald-400 font-mono">Mastered</strong>, <strong className="text-cyan-400 font-mono">In Progress</strong>, and <strong className="text-amber-400 font-mono">Needs Revision</strong>.
         </p>
       </div>
 
-      {/* FILTER BUTTONS */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4 text-xs font-semibold">
-        <div className="flex items-center gap-2">
+      {/* FILTER BUTTONS (OBSIDIAN SEGMENTED STRIP) */}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4 text-xs font-semibold">
+        <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-1 sm:pb-0">
           <button
             onClick={() => setSubjectFilter('')}
-            className={`px-3.5 py-2 rounded-xl transition-all ${
+            className={`px-3.5 py-2 rounded-xl transition-all font-mono text-xs ${
               subjectFilter === ''
-                ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-sm'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+                ? 'bg-cyan-500 text-slate-950 font-bold shadow-md shadow-cyan-500/25'
+                : 'console-card text-slate-300 hover:text-white border-white/10'
             }`}
           >
-            All Subjects ({roadmap.length})
+            All Tracks ({roadmap.length})
           </button>
           <button
             onClick={() => setSubjectFilter('math')}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl transition-all ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl transition-all font-mono text-xs ${
               subjectFilter === 'math'
-                ? 'bg-blue-600 text-white shadow-sm'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+                ? 'bg-cyan-500 text-slate-950 font-bold shadow-md shadow-cyan-500/25'
+                : 'console-card text-slate-300 hover:text-white border-white/10'
             }`}
           >
             <Calculator className="h-3.5 w-3.5" />
-            <span>Mathematics</span>
+            <span>Math</span>
           </button>
           <button
             onClick={() => setSubjectFilter('physics')}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl transition-all ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl transition-all font-mono text-xs ${
               subjectFilter === 'physics'
-                ? 'bg-purple-600 text-white shadow-sm'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+                ? 'bg-amber-400 text-slate-950 font-bold shadow-md shadow-amber-400/25'
+                : 'console-card text-slate-300 hover:text-white border-white/10'
             }`}
           >
             <Atom className="h-3.5 w-3.5" />
@@ -114,10 +123,10 @@ export const LearningPathPage: React.FC = () => {
           </button>
           <button
             onClick={() => setSubjectFilter('chemistry')}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl transition-all ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl transition-all font-mono text-xs ${
               subjectFilter === 'chemistry'
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+                ? 'bg-emerald-400 text-slate-950 font-bold shadow-md shadow-emerald-400/25'
+                : 'console-card text-slate-300 hover:text-white border-white/10'
             }`}
           >
             <FlaskConical className="h-3.5 w-3.5" />
@@ -125,20 +134,21 @@ export const LearningPathPage: React.FC = () => {
           </button>
         </div>
 
-        <span className="text-slate-500 text-xs">
-          Interactive Node Tree • Click any topic node
+        <span className="text-slate-400 text-[11px] font-mono hidden sm:block">
+          ⚡ Interactive Graph • Select any node to inspect telemetry
         </span>
       </div>
 
       {/* ROADMAP TREE & DETAIL SIDE PANEL */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
         {/* ROADMAP NODE LIST */}
-        <div className="lg:col-span-2 space-y-4">
+        <div className="lg:col-span-7 space-y-4 relative">
           {roadmap.map((topic, index) => {
             const statusInfo = getStatusBadge(topic.progress?.status);
             const StatusIcon = statusInfo.icon;
             const isSelected = selectedTopic?.id === topic.id;
+            const masteryPct = Math.round((topic.progress?.masteryScore || 0) * 100);
 
             return (
               <div
@@ -146,59 +156,62 @@ export const LearningPathPage: React.FC = () => {
                 onClick={() => setSelectedTopic(topic)}
                 className={`relative p-5 rounded-2xl border transition-all cursor-pointer ${
                   isSelected
-                    ? 'bg-white dark:bg-slate-800 border-brand-500 shadow-md ring-2 ring-brand-500/20'
-                    : 'bg-white/80 dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 hover:border-slate-300'
+                    ? 'console-card-elevated border-cyan-500/50 shadow-xl shadow-cyan-500/10 ring-1 ring-cyan-500/30 scale-[1.01]'
+                    : 'console-card border-white/10 hover:border-white/25'
                 }`}
               >
-                {/* Node Connection Line */}
+                {/* Neon Connecting Fiber Line */}
                 {index < roadmap.length - 1 && (
-                  <div className="absolute left-9 bottom-[-17px] w-0.5 h-4 bg-slate-300 dark:bg-slate-700 z-0" />
+                  <div className="absolute left-9 bottom-[-17px] w-0.5 h-4 bg-gradient-to-b from-cyan-500/40 via-indigo-500/40 to-purple-500/40 z-0" />
                 )}
 
                 <div className="flex items-start justify-between gap-4 relative z-10">
                   <div className="flex items-start gap-3.5">
                     <div
-                      className={`h-9 w-9 rounded-xl flex items-center justify-center shrink-0 border ${statusInfo.bg}`}
+                      className={`h-10 w-10 rounded-xl flex items-center justify-center shrink-0 border ${statusInfo.bg}`}
                     >
                       <StatusIcon className="h-4 w-4" />
                     </div>
 
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
                           {topic.subjectId.toUpperCase()} • UNIT {topic.orderIndex}
                         </span>
                         <span
-                          className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusInfo.bg}`}
+                          className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-full border uppercase tracking-wider ${statusInfo.bg}`}
                         >
                           {statusInfo.label}
                         </span>
                       </div>
 
-                      <h3 className="font-bold text-sm sm:text-base text-slate-900 dark:text-white mt-1">
-                        {topic.title}
+                      <h3 className="font-bold text-base text-white font-display mt-1.5 flex items-center gap-1.5">
+                        <span>{topic.title}</span>
+                        {isSelected && <ChevronRight className="h-4 w-4 text-cyan-400" />}
                       </h3>
 
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">
+                      <p className="text-xs text-slate-400 mt-1 line-clamp-1 leading-relaxed">
                         {topic.description}
                       </p>
 
                       {/* Explainable Recommendation Note */}
                       {topic.recommendationNote && (
-                        <p className="text-xs font-semibold text-brand-600 dark:text-brand-400 mt-2 flex items-center gap-1">
-                          <Sparkles className="h-3.5 w-3.5" />
+                        <p className="text-xs font-semibold text-cyan-400 mt-2 flex items-center gap-1.5">
+                          <Sparkles className="h-3.5 w-3.5 text-cyan-300" />
                           <span>{topic.recommendationNote}</span>
                         </p>
                       )}
                     </div>
                   </div>
 
-                  {/* Mastery Percentage Ring / Stat */}
+                  {/* Mastery Percentage Readout */}
                   <div className="text-right shrink-0">
-                    <span className="font-extrabold text-sm text-slate-800 dark:text-slate-200">
-                      {Math.round((topic.progress?.masteryScore || 0) * 100)}%
+                    <span className={`font-mono font-extrabold text-base ${
+                      masteryPct >= 80 ? 'text-emerald-400' : masteryPct >= 50 ? 'text-cyan-400' : 'text-slate-400'
+                    }`}>
+                      {masteryPct}%
                     </span>
-                    <p className="text-[10px] text-slate-400">Mastery</p>
+                    <p className="text-[10px] font-mono text-slate-500 uppercase">Mastery</p>
                   </div>
                 </div>
               </div>
@@ -208,68 +221,69 @@ export const LearningPathPage: React.FC = () => {
 
         {/* SELECTED TOPIC INSPECTOR PANEL */}
         {selectedTopic && (
-          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5 sticky top-20">
+          <div className="lg:col-span-5 console-card-elevated border-white/10 rounded-3xl p-6 sm:p-7 shadow-2xl space-y-5 sticky top-20">
             <div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                Topic Diagnostic Insight
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-cyan-400 block mb-1">
+                Diagnostic Node Inspection
               </span>
-              <h2 className="text-xl font-extrabold text-slate-900 dark:text-white mt-1">
+              <h2 className="text-xl sm:text-2xl font-extrabold text-white font-display">
                 {selectedTopic.title}
               </h2>
             </div>
 
-            {/* Status Breakdown */}
-            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-2 text-xs">
+            {/* Status Breakdown Telemetry */}
+            <div className="p-4 rounded-2xl bg-slate-950/80 border border-white/10 space-y-2.5 text-xs font-mono shadow-inner">
               <div className="flex items-center justify-between">
-                <span className="text-slate-500">Current Status:</span>
-                <span className="font-bold text-slate-900 dark:text-white uppercase">
+                <span className="text-slate-400">Current Node State:</span>
+                <span className="font-bold text-white uppercase text-[11px] px-2 py-0.5 rounded bg-white/5 border border-white/10">
                   {selectedTopic.progress?.status || 'Not Started'}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-slate-500">Mastery Score:</span>
-                <span className="font-bold text-brand-600 dark:text-brand-400">
+                <span className="text-slate-400">Mastery Calibration:</span>
+                <span className="font-bold text-cyan-400 text-sm">
                   {Math.round((selectedTopic.progress?.masteryScore || 0) * 100)}%
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-slate-500">Questions Attempted:</span>
-                <span className="font-bold text-slate-700 dark:text-slate-300">
-                  {selectedTopic.progress?.attemptsCount || 0}
+                <span className="text-slate-400">Assessment Questions:</span>
+                <span className="font-bold text-slate-200">
+                  {selectedTopic.progress?.attemptsCount || 0} attempted
                 </span>
               </div>
             </div>
 
             {/* Explainable Why This Is Recommended */}
-            <div className="space-y-1 text-xs">
-              <h4 className="font-bold text-slate-800 dark:text-slate-200">
-                Why This Is In Your Path:
+            <div className="space-y-1.5 text-xs">
+              <h4 className="font-bold text-white font-display text-xs flex items-center gap-1.5">
+                <Compass className="h-3.5 w-3.5 text-cyan-400" />
+                <span>Pedagogical Recommendation Rationale:</span>
               </h4>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p className="text-slate-300 leading-relaxed bg-white/5 p-3.5 rounded-xl border border-white/10">
                 {selectedTopic.progress?.status === 'needs_revision'
-                  ? `Recent quiz mistakes in "${selectedTopic.progress.lastMistakeConcept || 'core rules'}" flagged this topic for focused practice.`
+                  ? `Recent diagnostic errors in "${selectedTopic.progress.lastMistakeConcept || 'core principles'}" flagged this topic for immediate review.`
                   : selectedTopic.progress?.status === 'mastered'
-                  ? 'You have demonstrated solid mastery. Feel free to review or tackle advanced exercises.'
-                  : 'Core syllabus topic required for Board Exam curriculum.'}
+                  ? 'Demonstrated high conceptual fluency (85%+ accuracy). Ready for advanced challenge questions.'
+                  : 'Core prerequisite chapter required for Board Exam STEM mastery.'}
               </p>
             </div>
 
             {/* Actions */}
-            <div className="space-y-2 pt-2">
+            <div className="space-y-2.5 pt-2">
               <Link
                 to={`/quiz?topic=${selectedTopic.id}`}
-                className="w-full py-2.5 px-4 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-semibold text-xs flex items-center justify-center gap-2 transition-colors shadow-sm"
+                className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-lg shadow-cyan-500/25 active:scale-95"
               >
-                <span>Take Diagnostic Quiz</span>
+                <span>Launch Diagnostic Quiz</span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </Link>
 
               <Link
                 to={`/tutor?q=${encodeURIComponent(`Teach me ${selectedTopic.title} step by step`)}`}
-                className="w-full py-2.5 px-4 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold text-xs flex items-center justify-center gap-2 transition-colors"
+                className="w-full py-3 px-4 rounded-xl console-card border border-white/15 hover:border-cyan-500/40 text-cyan-300 font-semibold text-xs flex items-center justify-center gap-2 transition-all active:scale-95"
               >
-                <Sparkles className="h-3.5 w-3.5 text-brand-500" />
-                <span>Ask Socratic Tutor</span>
+                <Sparkles className="h-3.5 w-3.5 text-cyan-400" />
+                <span>Explore with Socratic Tutor</span>
               </Link>
             </div>
 
