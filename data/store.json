@@ -14,7 +14,7 @@
     "explanationStyle": "step_by_step",
     "confidenceLevel": "moderate",
     "streakCount": 4,
-    "totalStudyMinutes": 197,
+    "totalStudyMinutes": 200,
     "xpPoints": 640,
     "lastActiveDate": "2026-10-09"
   },
@@ -30,11 +30,11 @@
     "math-alg-quad": {
       "topicId": "math-alg-quad",
       "status": "needs_revision",
-      "masteryScore": 0.358,
-      "attemptsCount": 9,
-      "correctCount": 5,
+      "masteryScore": 0.348,
+      "attemptsCount": 10,
+      "correctCount": 6,
       "lastMistakeConcept": "Discriminant signs with negative b",
-      "lastPracticedAt": "2026-10-10T00:08:56.555Z"
+      "lastPracticedAt": "2026-10-11T11:59:49.372Z"
     },
     "phys-motion-1d": {
       "topicId": "phys-motion-1d",
@@ -71,6 +71,16 @@
     }
   },
   "quizAttempts": [
+    {
+      "id": "quiz-att-1791719989372",
+      "studentId": "demo-student-aarav",
+      "subject": "math",
+      "topicId": "math-alg-quad",
+      "score": 1,
+      "totalQuestions": 3,
+      "timeSpentSeconds": 60,
+      "timestamp": "2026-10-11T11:59:49.372Z"
+    },
     {
       "id": "quiz-att-1791590936555",
       "studentId": "demo-student-aarav",
