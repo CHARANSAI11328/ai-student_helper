@@ -78,30 +78,30 @@ export const Navbar: React.FC = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 bg-white/85 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-900/85 transition-colors shadow-sm">
+      <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-slate-950/85 backdrop-blur-2xl transition-colors shadow-xl shadow-black/40">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between gap-2 sm:gap-4">
             
             {/* 1. BRAND IDENTITY */}
             <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
-              <div className="relative h-10 w-10 rounded-2xl bg-gradient-to-tr from-brand-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-md shadow-brand-500/25 group-hover:scale-105 group-hover:shadow-brand-500/40 transition-all duration-300">
-                <Sparkles className="h-5 w-5 animate-pulse" />
+              <div className="relative h-10 w-10 rounded-2xl bg-gradient-to-tr from-cyan-500 via-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-cyan-500/20 group-hover:scale-105 group-hover:shadow-cyan-500/40 transition-all duration-300 border border-white/20">
+                <Sparkles className="h-5 w-5 animate-pulse text-cyan-200" />
                 <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500 border border-white dark:border-slate-900"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-400 border border-slate-950"></span>
                 </span>
               </div>
               <div className="flex flex-col">
                 <div className="flex items-center gap-1.5">
-                  <span className="font-extrabold text-lg sm:text-xl tracking-tight text-slate-900 dark:text-white">
-                    Learnova<span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-500 to-indigo-500">AI</span>
+                  <span className="font-extrabold text-lg sm:text-xl tracking-tight text-white font-display">
+                    Learnova<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-300 to-purple-400">AI</span>
                   </span>
-                  <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded-full bg-brand-50 text-brand-700 dark:bg-brand-950/70 dark:text-brand-300 border border-brand-200 dark:border-brand-800">
+                  <span className="text-[10px] uppercase font-mono font-bold tracking-wider px-1.5 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-500/30">
                     STEM
                   </span>
                 </div>
-                <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500 hidden sm:block">
-                  Class 6–12 Socratic Tutor
+                <span className="text-[10px] font-mono text-slate-400 hidden sm:block">
+                  Class 6–12 Socratic Studio
                 </span>
               </div>
             </Link>
@@ -114,8 +114,8 @@ export const Navbar: React.FC = () => {
                 to="/dashboard"
                 className={`flex items-center gap-1.5 px-2.5 xl:px-3 py-2 rounded-xl transition-all duration-200 ${
                   location.pathname === '/dashboard'
-                    ? 'bg-brand-50 text-brand-700 font-semibold dark:bg-brand-950/70 dark:text-brand-300 shadow-sm border border-brand-200/60 dark:border-brand-800/60'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800/60'
+                    ? 'bg-cyan-500/10 text-cyan-300 font-semibold shadow-sm border border-cyan-500/30'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
                 }`}
               >
                 <Layers className="h-3.5 w-3.5" />
@@ -127,13 +127,13 @@ export const Navbar: React.FC = () => {
                 to="/tutor"
                 className={`relative flex items-center gap-1.5 px-3 xl:px-3.5 py-2 rounded-xl transition-all duration-200 ${
                   location.pathname === '/tutor'
-                    ? 'bg-gradient-to-r from-brand-500 to-indigo-600 text-white font-semibold shadow-md shadow-brand-500/25 scale-[1.02]'
-                    : 'bg-brand-50/70 text-brand-700 dark:bg-brand-950/40 dark:text-brand-300 hover:bg-brand-100/80 dark:hover:bg-brand-900/40 border border-brand-200/60 dark:border-brand-800/60'
+                    ? 'bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 text-white font-semibold shadow-lg shadow-cyan-500/25 scale-[1.02] border border-white/20'
+                    : 'bg-cyan-950/40 text-cyan-300 hover:bg-cyan-900/40 border border-cyan-500/30'
                 }`}
               >
-                <Sparkles className="h-3.5 w-3.5" />
+                <Sparkles className="h-3.5 w-3.5 text-cyan-300" />
                 <span className="font-semibold">{t.nav.tutor}</span>
-                <span className="text-[9px] font-bold px-1 py-0.2 rounded bg-amber-400 text-slate-950">
+                <span className="text-[9px] font-bold font-mono px-1 py-0.2 rounded bg-amber-400 text-slate-950">
                   AI
                 </span>
               </Link>
@@ -143,8 +143,8 @@ export const Navbar: React.FC = () => {
                 to="/vision-lab"
                 className={`flex items-center gap-1.5 px-2.5 xl:px-3 py-2 rounded-xl transition-all duration-200 ${
                   location.pathname === '/vision-lab'
-                    ? 'bg-brand-50 text-brand-700 font-semibold dark:bg-brand-950/70 dark:text-brand-300 shadow-sm border border-brand-200/60 dark:border-brand-800/60'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800/60'
+                    ? 'bg-cyan-500/10 text-cyan-300 font-semibold shadow-sm border border-cyan-500/30'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
                 }`}
               >
                 <Camera className="h-3.5 w-3.5" />
@@ -159,8 +159,8 @@ export const Navbar: React.FC = () => {
                   onClick={() => setLearnDropdownOpen(!learnDropdownOpen)}
                   className={`flex items-center gap-1.5 px-2.5 xl:px-3 py-2 rounded-xl transition-all duration-200 ${
                     isLearnActive
-                      ? 'bg-brand-50 text-brand-700 font-semibold dark:bg-brand-950/70 dark:text-brand-300 shadow-sm border border-brand-200/60 dark:border-brand-800/60'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800/60'
+                      ? 'bg-cyan-500/10 text-cyan-300 font-semibold shadow-sm border border-cyan-500/30'
+                      : 'text-slate-300 hover:text-white hover:bg-white/5'
                   }`}
                 >
                   <BookOpen className="h-3.5 w-3.5" />
@@ -218,11 +218,11 @@ export const Navbar: React.FC = () => {
                 to="/quiz"
                 className={`flex items-center gap-1.5 px-2.5 xl:px-3 py-2 rounded-xl transition-all duration-200 ${
                   location.pathname === '/quiz'
-                    ? 'bg-brand-50 text-brand-700 font-semibold dark:bg-brand-950/70 dark:text-brand-300 shadow-sm border border-brand-200/60 dark:border-brand-800/60'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800/60'
+                    ? 'bg-cyan-500/10 text-cyan-300 font-semibold shadow-sm border border-cyan-500/30'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
                 }`}
               >
-                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
                 <span>{t.nav.quizCenter}</span>
               </Link>
 
@@ -231,11 +231,11 @@ export const Navbar: React.FC = () => {
                 to="/notes"
                 className={`flex items-center gap-1.5 px-2.5 xl:px-3 py-2 rounded-xl transition-all duration-200 ${
                   location.pathname === '/notes'
-                    ? 'bg-brand-50 text-brand-700 font-semibold dark:bg-brand-950/70 dark:text-brand-300 shadow-sm border border-brand-200/60 dark:border-brand-800/60'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800/60'
+                    ? 'bg-cyan-500/10 text-cyan-300 font-semibold shadow-sm border border-cyan-500/30'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
                 }`}
               >
-                <Bookmark className="h-3.5 w-3.5" />
+                <Bookmark className="h-3.5 w-3.5 text-amber-400" />
                 <span className="hidden xl:inline">Notes & Cheat Sheets</span>
                 <span className="xl:hidden">Notes</span>
               </Link>
@@ -245,11 +245,11 @@ export const Navbar: React.FC = () => {
                 to="/analytics"
                 className={`flex items-center gap-1.5 px-2.5 xl:px-3 py-2 rounded-xl transition-all duration-200 ${
                   location.pathname === '/analytics'
-                    ? 'bg-brand-50 text-brand-700 font-semibold dark:bg-brand-950/70 dark:text-brand-300 shadow-sm border border-brand-200/60 dark:border-brand-800/60'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800/60'
+                    ? 'bg-cyan-500/10 text-cyan-300 font-semibold shadow-sm border border-cyan-500/30'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
                 }`}
               >
-                <BarChart3 className="h-3.5 w-3.5" />
+                <BarChart3 className="h-3.5 w-3.5 text-purple-400" />
                 <span>Analytics</span>
               </Link>
 

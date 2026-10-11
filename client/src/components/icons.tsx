@@ -496,3 +496,16 @@ export const GraduationCap = createIcon(
 export const Star = createIcon(
   <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
 );
+
+export const Terminal = createIcon(
+  <>
+    <polyline points="4 17 10 11 4 5" />
+    <line x1="12" x2="20" y1="19" y2="19" />
+  </>
+);
+
+export const ChevronRight = createIcon(
+  <path d="m9 18 6-6-6-6" />
+);
+
+

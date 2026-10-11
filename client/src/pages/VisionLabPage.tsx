@@ -114,32 +114,33 @@ export const VisionLabPage: React.FC = () => {
       
       {/* HEADER */}
       <div className="space-y-2">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 text-xs font-semibold">
-          <Camera className="h-3.5 w-3.5" />
-          <span>Multimodal AI Vision & OCR</span>
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-medium">
+          <Camera className="h-3.5 w-3.5 text-cyan-400" />
+          <span>MULTIMODAL AI VISION & OCR LAB</span>
         </div>
-        <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-white font-display tracking-tight">
           {t.vision.title}
         </h1>
-        <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl">
+        <p className="text-sm text-slate-300 max-w-2xl leading-relaxed">
           {t.vision.subtitle}. Learnova extracts handwritten formulas, checks transcription clarity, and solves them step-by-step.
         </p>
       </div>
 
       {/* SAMPLE TEST CASE SELECTOR (FOR JUDGES) */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm space-y-2">
-        <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-          Judge Fast-Track Samples (Click to test without camera upload):
+      <div className="console-card-elevated rounded-2xl p-5 border-white/10 shadow-xl space-y-3">
+        <span className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-2">
+          <Sparkles className="h-3.5 w-3.5" />
+          <span>Judge Fast-Track Test Samples (Instant verification without camera upload):</span>
         </span>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2.5">
           {sampleTestCases.map((sample, idx) => (
             <button
               key={idx}
               onClick={() => handleLoadSample(sample)}
-              className="text-xs px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold transition-colors flex items-center gap-2"
+              className="text-xs px-4 py-2 rounded-xl console-card border-white/10 hover:border-cyan-500/40 text-slate-200 hover:text-white font-semibold transition-all flex items-center gap-2"
             >
               <span>{sample.label}</span>
-              <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+              <ArrowRight className="h-3.5 w-3.5 text-cyan-400" />
             </button>
           ))}
         </div>
@@ -149,18 +150,18 @@ export const VisionLabPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         
         {/* LEFT COLUMN: UPLOAD & PREVIEW */}
-        <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
+        <div className="console-card-elevated rounded-3xl p-6 sm:p-7 border-white/10 shadow-2xl space-y-6">
           
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             {/* Input Mode Switcher */}
-            <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+            <div className="flex items-center gap-1 console-card p-1 rounded-xl border border-white/10">
               <button
                 type="button"
                 onClick={() => setInputMode('upload')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                   inputMode === 'upload'
-                    ? 'bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-300 shadow-sm'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-cyan-500 text-slate-950 shadow-sm font-bold'
+                    : 'text-slate-300 hover:text-white'
                 }`}
               >
                 📸 Photo / File Upload
@@ -170,8 +171,8 @@ export const VisionLabPage: React.FC = () => {
                 onClick={() => setInputMode('slate')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                   inputMode === 'slate'
-                    ? 'bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-300 shadow-sm'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-cyan-500 text-slate-950 shadow-sm font-bold'
+                    : 'text-slate-300 hover:text-white'
                 }`}
               >
                 ✏️ Digital Slate Canvas
@@ -182,7 +183,7 @@ export const VisionLabPage: React.FC = () => {
             <select
               value={selectedSubject}
               onChange={(e) => setSelectedSubject(e.target.value as any)}
-              className="text-xs px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 font-semibold focus:outline-none"
+              className="text-xs px-3 py-1.5 rounded-xl border border-white/10 bg-slate-900 text-white font-semibold focus:outline-none focus:border-cyan-500/50"
             >
               <option value="math">{t.subjects.math}</option>
               <option value="physics">{t.subjects.physics}</option>
@@ -200,15 +201,15 @@ export const VisionLabPage: React.FC = () => {
                 }}
               />
             ) : (
-              <label className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-2xl p-8 flex flex-col items-center justify-center text-center cursor-pointer hover:border-brand-500 hover:bg-brand-50/20 transition-all space-y-3">
-                <div className="h-14 w-14 rounded-2xl bg-brand-50 text-brand-600 dark:bg-brand-950 dark:text-brand-400 flex items-center justify-center">
+              <label className="border-2 border-dashed border-white/15 hover:border-cyan-500/50 rounded-2xl p-8 flex flex-col items-center justify-center text-center cursor-pointer bg-slate-950/40 hover:bg-cyan-950/20 transition-all space-y-3">
+                <div className="h-14 w-14 rounded-2xl bg-cyan-950/80 border border-cyan-500/30 text-cyan-400 flex items-center justify-center shadow-lg shadow-cyan-950/50">
                   <Camera className="h-7 w-7" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                  <p className="text-sm font-bold text-white">
                     {t.vision.uploadButton}
                   </p>
-                  <p className="text-xs text-slate-500 mt-1">
+                  <p className="text-xs font-mono text-slate-400 mt-1">
                     Supports JPG, PNG, WebP up to 10MB
                   </p>
                 </div>
@@ -222,7 +223,7 @@ export const VisionLabPage: React.FC = () => {
             )
           ) : (
             <div className="space-y-4">
-              <div className="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 flex items-center justify-center max-h-72">
+              <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-black/50 flex items-center justify-center max-h-72">
                 <img
                   src={imagePreview}
                   alt="Uploaded handwritten problem"
@@ -234,7 +235,7 @@ export const VisionLabPage: React.FC = () => {
                     setImageFile(null);
                     setAnalysisResult(null);
                   }}
-                  className="absolute top-3 right-3 p-1.5 rounded-full bg-slate-900/80 text-white hover:bg-slate-900 transition-colors shadow-sm"
+                  className="absolute top-3 right-3 p-1.5 rounded-full bg-slate-900/80 text-white hover:bg-slate-900 transition-colors shadow-sm border border-white/10"
                   title="Remove Image"
                 >
                   <X className="h-4 w-4" />
@@ -246,16 +247,16 @@ export const VisionLabPage: React.FC = () => {
                 <button
                   onClick={() => handleRunAnalysis('solve')}
                   disabled={isLoading}
-                  className="flex-1 py-3 px-4 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-semibold text-xs shadow-md shadow-brand-500/20 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-500/20 transition-all disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                 >
                   {isLoading ? (
                     <>
-                      <RefreshCw className="h-4 w-4 animate-spin" />
+                      <RefreshCw className="h-4 w-4 animate-spin text-slate-950" />
                       <span>Analyzing Handwriting...</span>
                     </>
                   ) : (
                     <>
-                      <Sparkles className="h-4 w-4" />
+                      <Sparkles className="h-4 w-4 text-slate-950" />
                       <span>{t.vision.solveNow}</span>
                     </>
                   )}
@@ -264,7 +265,7 @@ export const VisionLabPage: React.FC = () => {
                 <button
                   onClick={() => handleRunAnalysis('transcribe_only')}
                   disabled={isLoading}
-                  className="py-3 px-4 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold text-xs transition-colors"
+                  className="py-3 px-4 rounded-xl console-card border-white/10 hover:border-cyan-500/40 text-slate-200 hover:text-white font-semibold text-xs transition-colors"
                 >
                   Extract Text Only
                 </button>
@@ -272,8 +273,8 @@ export const VisionLabPage: React.FC = () => {
             </div>
           )}
 
-          <div className="p-3.5 bg-slate-50 dark:bg-slate-800/40 rounded-xl text-xs text-slate-500 space-y-1">
-            <p className="font-semibold text-slate-700 dark:text-slate-300">💡 Tips for best recognition:</p>
+          <div className="p-4 console-card rounded-2xl border-white/5 text-xs text-slate-400 space-y-1 font-mono">
+            <p className="font-semibold text-cyan-300">💡 Telemetry tips for maximum accuracy:</p>
             <ul className="list-disc pl-4 space-y-0.5">
               <li>Ensure good lighting without heavy cast shadows.</li>
               <li>Keep symbols like exponents ($x^2$) and signs ($+$ vs $\times$) clear.</li>
@@ -288,20 +289,20 @@ export const VisionLabPage: React.FC = () => {
           
           {/* Transcription Review Card */}
           {analysisResult && (
-            <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 animate-fadeIn">
+            <div className="console-card-elevated rounded-3xl p-6 sm:p-7 border-white/10 shadow-2xl space-y-5 animate-fadeIn">
               
-              <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-                <h3 className="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-indigo-500" />
+              <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                <h3 className="font-bold text-sm text-white flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-cyan-400" />
                   <span>{t.vision.transcriptionResult}</span>
                 </h3>
 
                 <div className="flex items-center gap-2">
                   <span
-                    className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                    className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full ${
                       analysisResult.transcription.confidenceLevel === 'high'
-                        ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                        : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
+                        ? 'bg-emerald-950/80 text-emerald-300 border border-emerald-800'
+                        : 'bg-amber-950/80 text-amber-300 border border-amber-800'
                     }`}
                   >
                     Confidence: {analysisResult.transcription.confidenceLevel.toUpperCase()}
@@ -309,7 +310,7 @@ export const VisionLabPage: React.FC = () => {
 
                   <button
                     onClick={() => setIsEditing(!isEditing)}
-                    className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-cyan-300 hover:bg-white/5 transition-colors"
                     title="Edit Transcription"
                   >
                     <Edit3 className="h-4 w-4" />
@@ -319,8 +320,8 @@ export const VisionLabPage: React.FC = () => {
 
               {/* Ambiguity / Uncertainty Notice */}
               {analysisResult.transcription.clarificationNeeded && (
-                <div className="p-3 bg-amber-50 dark:bg-amber-950/40 rounded-xl border border-amber-200 dark:border-amber-800 text-xs text-amber-900 dark:text-amber-200 flex items-start gap-2">
-                  <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
+                <div className="p-3.5 bg-amber-950/30 rounded-2xl border border-amber-500/30 text-xs text-amber-200 flex items-start gap-2.5">
+                  <AlertTriangle className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" />
                   <div>
                     <strong>Uncertain Handwriting:</strong> {analysisResult.transcription.uncertaintyNotes}
                     <p className="mt-1 font-semibold">{analysisResult.transcription.suggestedClarificationQuestion}</p>
@@ -335,23 +336,23 @@ export const VisionLabPage: React.FC = () => {
                     value={editedTranscription}
                     onChange={(e) => setEditedTranscription(e.target.value)}
                     rows={3}
-                    className="w-full p-3 text-sm rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500 font-mono"
+                    className="w-full p-3.5 text-sm rounded-2xl border border-white/10 bg-slate-950 text-white focus:outline-none focus:border-cyan-500/50 font-mono"
                   />
                   <button
                     onClick={() => setIsEditing(false)}
-                    className="px-3 py-1.5 rounded-lg bg-brand-500 text-white font-semibold text-xs"
+                    className="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow-sm transition-all"
                   >
                     Save Correction
                   </button>
                 </div>
               ) : (
-                <div className="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl space-y-2">
-                  <p className="text-sm font-medium text-slate-800 dark:text-slate-200">
+                <div className="p-4 console-card rounded-2xl space-y-2.5 border-white/5">
+                  <p className="text-sm font-medium text-slate-200">
                     {editedTranscription}
                   </p>
                   {analysisResult.transcription.equationsDetected.length > 0 && (
-                    <div className="pt-2 border-t border-slate-200 dark:border-slate-700">
-                      <span className="text-[10px] font-bold uppercase text-slate-400 block mb-1">
+                    <div className="pt-2.5 border-t border-white/10">
+                      <span className="text-[10px] font-mono font-bold uppercase text-slate-400 block mb-1">
                         Detected Mathematical Formula:
                       </span>
                       <MathRenderer content={`$$${analysisResult.transcription.equationsDetected[0]}$$`} />
@@ -364,9 +365,9 @@ export const VisionLabPage: React.FC = () => {
 
           {/* Socratic Solution Card */}
           {analysisResult?.solution && (
-            <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 animate-fadeIn">
-              <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-                <h3 className="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
+            <div className="console-card-elevated rounded-3xl p-6 sm:p-7 border-white/10 shadow-2xl space-y-5 animate-fadeIn">
+              <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                <h3 className="font-bold text-sm text-white flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-brand-500" />
                   <span>Socratic Step-by-Step Resolution</span>
                 </h3>

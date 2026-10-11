@@ -4,10 +4,18 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0e8ce9" />
-    <meta name="description" content="Learnova AI — Socratic STEM Learning Companion for School Students" />
+    <meta name="theme-color" content="#030712" />
+    <meta name="description" content="Learnova AI — Cinematic Socratic STEM Learning Companion for School Students" />
     <link rel="manifest" href="/manifest.json" />
+    
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+
+    <!-- KaTeX CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" />
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -15,6 +23,22 @@
         theme: {
           extend: {
             colors: {
+              obsidian: {
+                950: '#030712',
+                900: '#080d1a',
+                850: '#0c1426',
+                800: '#111c35',
+                750: '#162343',
+                700: '#1d2e54',
+                600: '#2d4375',
+              },
+              spectral: {
+                cyan: '#06b6d4',
+                violet: '#8b5cf6',
+                emerald: '#10b981',
+                amber: '#f59e0b',
+                rose: '#f43f5e',
+              },
               brand: {
                 50: '#f0f7ff',
                 100: '#e0effe',
@@ -33,6 +57,11 @@
                 physics: '#7c3aed',
                 chemistry: '#059669',
               }
+            },
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+              mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+              display: ['"Plus Jakarta Sans"', 'sans-serif'],
             }
           }
         }
@@ -40,7 +69,7 @@
     </script>
     <title>Learnova AI — Socratic AI Learning Companion for School Students</title>
   </head>
-  <body class="bg-slate-50 text-slate-900 antialiased selection:bg-brand-500 selection:text-white dark:bg-slate-950 dark:text-slate-100">
+  <body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-cyan-500 selection:text-black">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

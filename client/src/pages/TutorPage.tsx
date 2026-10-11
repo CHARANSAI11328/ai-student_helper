@@ -353,7 +353,7 @@ export const TutorPage: React.FC = () => {
       )}
 
       {/* CHAT STREAM CONTAINER */}
-      <div className={`flex-1 overflow-y-auto bg-slate-50/50 dark:bg-slate-950/50 rounded-2xl p-4 sm:p-6 border border-slate-200 dark:border-slate-800 space-y-6 ${activeWorkspaceTab === 'slate' ? 'hidden' : ''}`}>
+      <div className={`flex-1 overflow-y-auto console-card rounded-3xl p-4 sm:p-6 border-white/10 space-y-6 shadow-2xl ${activeWorkspaceTab === 'slate' ? 'hidden' : ''}`}>
         
         {messages.map((msg) => (
           <div
@@ -362,24 +362,24 @@ export const TutorPage: React.FC = () => {
           >
             {/* Student Message Bubble */}
             {msg.sender === 'student' ? (
-              <div className="max-w-2xl bg-brand-600 text-white rounded-2xl rounded-tr-sm px-5 py-3 shadow-sm text-sm space-y-1">
+              <div className="max-w-2xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-medium rounded-2xl rounded-tr-sm px-5 py-3 shadow-lg shadow-cyan-500/20 text-sm space-y-1">
                 <p className="leading-relaxed">{msg.text}</p>
-                <p className="text-[10px] text-brand-200 text-right">{msg.timestamp}</p>
+                <p className="text-[10px] text-slate-900/70 text-right font-mono">{msg.timestamp}</p>
               </div>
             ) : (
               /* Structured Socratic Pedagogical Response Card */
-              <div className="w-full max-w-4xl bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 space-y-5 animate-fadeIn">
+              <div className="w-full max-w-4xl console-card-elevated rounded-3xl border-white/10 shadow-2xl p-6 sm:p-7 space-y-5 animate-fadeIn">
                 
                 {/* Header with Model Badge & Quick Controls */}
-                <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 text-xs">
+                <div className="flex items-center justify-between border-b border-white/10 pb-3 text-xs">
                   <div className="flex items-center gap-2">
-                    <div className="h-6 w-6 rounded-md bg-brand-500 text-white flex items-center justify-center font-bold text-xs">
+                    <div className="h-7 w-7 rounded-lg bg-gradient-to-tr from-cyan-500 to-purple-600 text-white flex items-center justify-center font-bold text-xs shadow-md shadow-cyan-500/20">
                       L
                     </div>
-                    <span className="font-bold text-slate-900 dark:text-white">
+                    <span className="font-bold text-white font-display">
                       Learnova Socratic Tutor
                     </span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-medium">
+                    <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-800/80">
                       {msg.modelUsed || 'AI Engine'}
                     </span>
                   </div>
@@ -388,16 +388,16 @@ export const TutorPage: React.FC = () => {
                     {/* Read Aloud Button */}
                     <button
                       onClick={() => handleReadAloud(msg.explanation ? `${msg.explanation.questionIntent}. Final Answer: ${msg.explanation.finalAnswer}` : msg.text)}
-                      className="p-1.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800"
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-cyan-300 hover:bg-white/5 transition-colors"
                       title={isPlayingAudio ? t.common.stopAudio : t.common.listen}
                     >
-                      {isPlayingAudio ? <VolumeX className="h-4 w-4 text-brand-500" /> : <Volume2 className="h-4 w-4" />}
+                      {isPlayingAudio ? <VolumeX className="h-4 w-4 text-cyan-400" /> : <Volume2 className="h-4 w-4" />}
                     </button>
 
                     {/* Copy Answer */}
                     <button
                       onClick={() => handleCopy(msg.id, msg.explanation ? msg.explanation.finalAnswer : msg.text)}
-                      className="p-1.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800"
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-cyan-300 hover:bg-white/5 transition-colors"
                       title={t.common.copy}
                     >
                       {copiedId === msg.id ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4" />}
@@ -621,22 +621,22 @@ export const TutorPage: React.FC = () => {
       </div>
 
       {/* INPUT CONTROLS BAR */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl p-3 border border-slate-200 dark:border-slate-800 shadow-sm space-y-2">
+      <div className="console-card-elevated rounded-3xl p-3 sm:p-4 border-white/10 shadow-2xl space-y-2.5">
         <form
           onSubmit={(e) => {
             e.preventDefault();
             handleAskQuestion();
           }}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2.5"
         >
           {/* Voice Input Toggle Button */}
           <button
             type="button"
             onClick={toggleSpeechRecognition}
-            className={`p-2.5 rounded-xl border transition-colors ${
+            className={`p-3 rounded-2xl border transition-all ${
               isRecording
-                ? 'bg-rose-500 text-white border-rose-600 animate-pulse'
-                : 'border-slate-200 text-slate-500 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800'
+                ? 'bg-rose-500 text-white border-rose-400 animate-pulse shadow-lg shadow-rose-500/40'
+                : 'border-white/10 text-slate-400 hover:text-white hover:bg-white/5 console-card'
             }`}
             title={isRecording ? 'Listening... click to stop' : 'Click to speak question'}
           >
@@ -650,14 +650,14 @@ export const TutorPage: React.FC = () => {
             onChange={(e) => setQuestionInput(e.target.value)}
             placeholder={t.tutor.inputPlaceholder}
             disabled={isLoading}
-            className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+            className="flex-1 px-4 py-3 rounded-2xl border border-white/10 bg-slate-950/90 text-slate-100 placeholder:text-slate-500 text-sm focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 shadow-inner"
           />
 
           {/* Submit Button */}
           <button
             type="submit"
             disabled={!questionInput.trim() || isLoading}
-            className="px-5 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-semibold text-xs transition-colors disabled:opacity-50 flex items-center gap-1.5"
+            className="px-6 py-3 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-xs transition-all disabled:opacity-40 shadow-lg shadow-cyan-500/25 active:scale-95 flex items-center gap-1.5 cursor-pointer"
           >
             <span>{t.common.submit}</span>
             <Send className="h-3.5 w-3.5" />

@@ -37,9 +37,39 @@ function setLocalItem<T>(key: string, value: T): void {
 }
 
 export function getStoredApiKey(): string {
-  return localStorage.getItem('learnova_gemini_api_key') ||
-         localStorage.getItem('learnova_gemini_key') ||
-         '';
+  const key =
+    localStorage.getItem('learnova_gemini_api_key') ||
+    localStorage.getItem('learnova_gemini_key') ||
+    '';
+  return key.trim();
+}
+
+/**
+ * Resilient JSON extractor that safely handles:
+ * - Markdown fences (```json ... ``` or ``` ... ```)
+ * - Leading / trailing conversational preambles
+ * - Newline anomalies
+ */
+export function extractJsonFromText(rawText: string): any {
+  if (!rawText || !rawText.trim()) {
+    throw new Error('Received empty response from Gemini model');
+  }
+
+  let clean = rawText.trim();
+
+  // 1. Strip markdown fences if present
+  if (clean.includes('```')) {
+    clean = clean.replace(/```(?:json)?\s*([\s\S]*?)\s*```/gi, '$1').trim();
+  }
+
+  // 2. Isolate JSON object between the outermost '{' and '}'
+  const firstBrace = clean.indexOf('{');
+  const lastBrace = clean.lastIndexOf('}');
+  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+    clean = clean.substring(firstBrace, lastBrace + 1);
+  }
+
+  return JSON.parse(clean);
 }
 
 export async function checkApiHealth(): Promise<SystemHealth> {
@@ -128,6 +158,7 @@ export async function askTutor(params: AskTutorParams): Promise<AskTutorResponse
   const startTime = Date.now();
   const apiKey = getStoredApiKey();
 
+  // 1. First attempt: Dedicated Backend Proxy (if running locally or hosted on Express)
   try {
     const res = await fetch(`${API_BASE}/tutor/ask`, {
       method: 'POST',
@@ -137,82 +168,118 @@ export async function askTutor(params: AskTutorParams): Promise<AskTutorResponse
       },
       body: JSON.stringify(params),
     });
-    if (!res.ok) throw new Error('Backend offline');
-    return await res.json();
+    if (res.ok) {
+      const contentType = res.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        const data = await res.json();
+        if (data.explanation) return data;
+      }
+    }
   } catch {
-    // If browser has a Gemini API key and backend is offline, try direct Gemini call!
-    if (apiKey) {
+    // Backend offline / GitHub Pages mode — proceed to Direct Google Gemini integration
+  }
+
+  // 2. Second attempt: Direct Client-to-Gemini Call using student's API key
+  let directErrorMessage = '';
+  if (apiKey) {
+    // Priority order of models to maximize success rate across Google AI quotas
+    const candidateModels = ['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-1.5-pro'];
+
+    for (const modelName of candidateModels) {
       try {
         const geminiRes = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+          `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               contents: [{
                 parts: [{
-                  text: `You are an expert Socratic STEM tutor for Grade ${params.grade} school students in ${params.subject}.
+                  text: `You are an elite, child-friendly Socratic STEM tutor for Grade ${params.grade} school students in ${params.subject}.
+Language mode: ${params.language || 'English'} (keep mathematical formulas strictly in standard LaTeX notation).
 Question: "${params.question}".
-Provide a clear, JSON response matching this schema:
+
+Break down the problem using this structured 9-part pedagogical schema and return ONLY raw JSON:
 {
-  "questionIntent": "Short string",
+  "questionIntent": "Short 1-sentence summary of the learning goal",
   "requiredConcepts": ["Concept 1", "Concept 2"],
-  "stepByStepReasoning": [{"stepNumber": 1, "title": "Step 1", "explanation": "Explanation", "mathExpression": "LaTeX"}],
-  "finalAnswer": "The answer",
-  "whyMethodWorks": "Explanation",
-  "realWorldAnalogy": "Everyday analogy",
-  "commonMistakes": "Pitfall to avoid",
-  "understandingCheckQuestion": {"question": "MCQ", "options": ["A", "B", "C", "D"], "correctAnswerIndex": 0, "explanation": "Reason"},
-  "suggestedNextTopic": "Next topic"
-}
-Return ONLY valid raw JSON.`
+  "stepByStepReasoning": [
+    {"stepNumber": 1, "title": "Identify Given Parameters", "explanation": "Clear explanation", "mathExpression": "$LaTeX formula$"},
+    {"stepNumber": 2, "title": "Apply Governing Law", "explanation": "Step calculation", "mathExpression": "$LaTeX formula$"}
+  ],
+  "finalAnswer": "The conclusive answer with units",
+  "whyMethodWorks": "Pedagogical explanation of why this physical or mathematical theorem applies",
+  "realWorldAnalogy": "Everyday intuitive analogy relatable for a school student",
+  "commonMistakes": "Key conceptual pitfall to avoid during exams",
+  "understandingCheckQuestion": {
+    "question": "A quick multiple-choice check question",
+    "options": ["Option A", "Option B", "Option C", "Option D"],
+    "correctAnswerIndex": 0,
+    "explanation": "Why this option is correct"
+  },
+  "suggestedNextTopic": "Suggested next topic to study"
+}`
                 }]
               }],
-              generationConfig: { responseMimeType: 'application/json' }
+              generationConfig: {
+                temperature: 0.3,
+                maxOutputTokens: 2048
+              }
             })
           }
         );
+
         if (geminiRes.ok) {
           const geminiData = await geminiRes.json();
           const rawText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text;
           if (rawText) {
-            const parsed = JSON.parse(rawText);
-            return {
-              success: true,
-              explanation: parsed,
-              metadata: {
-                modelUsed: 'Google Gemini 1.5 Flash (Direct Browser Ingest)',
-                isDemo: false,
-                executionTimeMs: Date.now() - startTime,
-                timestamp: new Date().toISOString()
-              }
-            };
+            const parsed = extractJsonFromText(rawText);
+            // Ensure essential fields exist
+            if (parsed.stepByStepReasoning && parsed.finalAnswer) {
+              return {
+                success: true,
+                explanation: parsed,
+                metadata: {
+                  modelUsed: `Google ${modelName} (Direct Live AI)`,
+                  isDemo: false,
+                  executionTimeMs: Date.now() - startTime,
+                  timestamp: new Date().toISOString()
+                }
+              };
+            }
           }
+        } else {
+          const errData = await geminiRes.json().catch(() => ({}));
+          directErrorMessage = errData.error?.message || `HTTP ${geminiRes.status}`;
+          console.warn(`[Learnova AI] Model ${modelName} call status ${geminiRes.status}:`, directErrorMessage);
         }
-      } catch (geminiErr) {
-        console.warn('Direct Gemini call failed, using Socratic fallback:', geminiErr);
+      } catch (err: any) {
+        directErrorMessage = err.message || 'Network error';
+        console.warn(`[Learnova AI] Failed attempt on ${modelName}:`, err);
       }
     }
-
-    // Graceful offline Socratic fallback
-    const explanation = getFallbackTutorExplanation(
-      params.question,
-      params.subject,
-      params.grade,
-      params.language || 'en'
-    );
-
-    return {
-      success: true,
-      explanation,
-      metadata: {
-        modelUsed: 'Learnova-Socratic-Engine (Zero-Config Offline Mode)',
-        isDemo: true,
-        executionTimeMs: Date.now() - startTime,
-        timestamp: new Date().toISOString(),
-      },
-    };
   }
+
+  // 3. Fallback: Deterministic Socratic Curriculum Engine
+  const explanation = getFallbackTutorExplanation(
+    params.question,
+    params.subject,
+    params.grade,
+    params.language || 'en'
+  );
+
+  return {
+    success: true,
+    explanation,
+    metadata: {
+      modelUsed: directErrorMessage
+        ? `Socratic Engine (API note: ${directErrorMessage.slice(0, 45)}...)`
+        : 'Learnova Socratic Engine (Deterministic Offline Mode)',
+      isDemo: true,
+      executionTimeMs: Date.now() - startTime,
+      timestamp: new Date().toISOString(),
+    },
+  };
 }
 
 export interface AnalyzeImageParams {
@@ -237,10 +304,12 @@ export interface AnalyzeImageResponse {
 
 export async function analyzeImage(params: AnalyzeImageParams): Promise<AnalyzeImageResponse> {
   const startTime = Date.now();
+  const apiKey = getStoredApiKey();
+
+  // 1. Try Backend Proxy if available
   try {
     let body: FormData | string;
     const headers: Record<string, string> = {};
-    const apiKey = getStoredApiKey();
     if (apiKey) headers['x-gemini-api-key'] = apiKey;
 
     if (params.imageFile) {
@@ -267,25 +336,127 @@ export async function analyzeImage(params: AnalyzeImageParams): Promise<AnalyzeI
       body,
     });
 
-    if (!res.ok) throw new Error('Unreachable');
-    return await res.json();
+    if (res.ok) {
+      const data = await res.json();
+      if (data.transcription) return data;
+    }
   } catch {
-    const transcription = getFallbackVisionTranscription(params.subject);
-    const solution = params.mode === 'transcribe_only'
-      ? null
-      : getFallbackTutorExplanation(transcription.extractedText, params.subject, params.grade, 'en');
-
-    return {
-      success: true,
-      transcription,
-      solution,
-      metadata: {
-        modelUsed: 'Learnova-Vision-Lab (Zero-Config Offline Mode)',
-        isDemo: true,
-        executionTimeMs: Date.now() - startTime,
-      },
-    };
+    // Backend offline / GitHub Pages mode
   }
+
+  // 2. Direct Browser Gemini Vision Call with API Key
+  if (apiKey && (params.imageBase64 || params.imageFile)) {
+    try {
+      let rawBase64 = '';
+      let mimeType = params.mimeType || 'image/jpeg';
+
+      if (params.imageBase64) {
+        const parts = params.imageBase64.split(',');
+        if (parts.length > 1) {
+          rawBase64 = parts[1];
+          const match = parts[0].match(/:(.*?);/);
+          if (match) mimeType = match[1];
+        } else {
+          rawBase64 = params.imageBase64;
+        }
+      } else if (params.imageFile) {
+        rawBase64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const result = reader.result as string;
+            resolve(result.split(',')[1] || '');
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(params.imageFile!);
+        });
+        mimeType = params.imageFile.type || 'image/jpeg';
+      }
+
+      if (rawBase64) {
+        const visionRes = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{
+                parts: [
+                  {
+                    inlineData: {
+                      mimeType: mimeType,
+                      data: rawBase64,
+                    }
+                  },
+                  {
+                    text: `Analyze this student STEM handwriting or diagram. Transcribe any equations into clean LaTeX. Return strictly raw JSON:
+{
+  "extractedText": "The transcribed equation or question in LaTeX format",
+  "confidence": 0.95,
+  "requiresClarification": false,
+  "clarificationPrompt": "",
+  "boundingBoxes": []
+}`
+                  }
+                ]
+              }],
+              generationConfig: {
+                temperature: 0.1,
+                maxOutputTokens: 1024
+              }
+            })
+          }
+        );
+
+        if (visionRes.ok) {
+          const vData = await visionRes.json();
+          const vText = vData.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (vText) {
+            const parsedTranscription: VisionTranscription = extractJsonFromText(vText);
+            let solution: TutorExplanation | null = null;
+            if (params.mode !== 'transcribe_only' && parsedTranscription.extractedText) {
+              const tutorResp = await askTutor({
+                question: parsedTranscription.extractedText,
+                subject: params.subject,
+                grade: params.grade,
+                language: 'en'
+              });
+              solution = tutorResp.explanation;
+            }
+
+            return {
+              success: true,
+              transcription: parsedTranscription,
+              solution,
+              metadata: {
+                modelUsed: 'Google Gemini 1.5 Flash Vision (Live Browser)',
+                isDemo: false,
+                executionTimeMs: Date.now() - startTime,
+              }
+            };
+          }
+        }
+      }
+    } catch (visionErr) {
+      console.warn('[Learnova Vision] Direct browser vision call failed:', visionErr);
+    }
+  }
+
+  // 3. Fallback: Curated Test OCR Transcriptions
+  const transcription = getFallbackVisionTranscription(params.subject);
+  const solution = params.mode === 'transcribe_only'
+    ? null
+    : getFallbackTutorExplanation(transcription.extractedText, params.subject, params.grade, 'en');
+
+  return {
+    success: true,
+    transcription,
+    solution,
+    metadata: {
+      modelUsed: 'Learnova Vision Engine (Curated Sample Mode)',
+      isDemo: true,
+      executionTimeMs: Date.now() - startTime,
+    },
+  };
 }
 
 export async function getSubjects(): Promise<Subject[]> {
